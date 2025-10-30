@@ -7,7 +7,6 @@ const Home = lazy(() => import("./Pages/Head"));
 export default function App() {
   return (
     <>
-      <nav>...</nav>
       <NavBar/>
       <Suspense fallback={<div style={{padding:16}}>Cargando…</div>}>
         <Routes>
