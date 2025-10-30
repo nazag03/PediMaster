@@ -1,6 +1,6 @@
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
-
+import NavBar from './Components/NavBar'
 const FoodForm = lazy(() => import("./Pages/FoodForm"));
 const Home = lazy(() => import("./Pages/Head"));
 
@@ -8,6 +8,7 @@ export default function App() {
   return (
     <>
       <nav>...</nav>
+      <NavBar/>
       <Suspense fallback={<div style={{padding:16}}>Cargando…</div>}>
         <Routes>
           <Route path="/" element={<Home />} />

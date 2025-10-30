@@ -1,0 +1,84 @@
+:root{
+  --nav-bg: #0f172a;  /* slate-900 */
+  --nav-border: #1f2937;
+  --nav-text: #e5e7eb;
+  --muted:#94a3b8;    /* slate-400 */
+  --brand:#22c55e;
+}
+
+.nav{
+  position: sticky; top:0; z-index: 50;
+  background: rgba(15, 23, 42, .85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.nav__inner{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav__brand{
+  font-weight: 800;
+  letter-spacing: .3px;
+  color: var(--nav-text);
+  text-decoration: none;
+}
+
+.nav__burger{
+  display: none;
+  width: 42px; height: 34px;
+  background: transparent; border: 0; cursor: pointer;
+}
+.nav__burger span{
+  display:block; height: 2px; width: 100%;
+  background: var(--nav-text);
+  margin: 6px 0;
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+/* Links desktop */
+.nav__links{
+  display: flex; align-items: center; gap: 12px;
+}
+
+.nav__link{
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 12px; border-radius: 10px;
+  transition: background .12s ease, color .12s ease;
+}
+.nav__link:hover{ color: var(--nav-text); background: rgba(255,255,255,.04); }
+.nav__link--active{ color: var(--nav-text); background: rgba(255,255,255,.08); }
+
+/* CTA */
+.nav__cta{
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #052e16; font-weight: 800;
+  border: 1px solid #14532d;
+}
+.nav__cta:hover{ filter: brightness(1.05); }
+
+/* Mobile */
+@media (max-width: 860px){
+  .nav__burger{ display: block; }
+  .nav__links{
+    position: absolute; left: 0; right: 0; top: 56px;
+    background: rgba(15, 23, 42, .98);
+    border-bottom: 1px solid var(--nav-border);
+    display: grid; gap: 6px; padding: 10px 16px;
+    transform: translateY(-12px);
+    opacity: 0; pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+  }
+  .nav__links.is-open{
+    opacity: 1; pointer-events: auto; transform: translateY(0);
+  }
+}
