@@ -206,16 +206,7 @@ export default function App() {
 
   return (
     <div id="top">
-      <nav className="nav">
-        <div className="nav__brand">{ROTI.nombre}</div>
-        <div className="nav__links">
-          <a href="#menu">Menú</a>
-          <a href="#info">Info</a>
-          <button className="btn btn--mini" onClick={handlePedir}>
-            WhatsApp
-          </button>
-        </div>
-      </nav>
+      
 
       <Hero nombre={ROTI.nombre} onPedir={handlePedir} />
 

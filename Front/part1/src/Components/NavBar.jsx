@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
+import { useAuth } from "../auth/useAuth"; // ✅ importa el contexto
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { user, logout } = useAuth(); // ✅ obtenemos el usuario logueado y logout()
 
   const linkClass = ({ isActive }) =>
     "nav__link" + (isActive ? " nav__link--active" : "");
@@ -13,7 +15,7 @@ export default function Navbar() {
       <div className="nav__inner">
         {/* Logo / Marca */}
         <NavLink to="/" className="nav__brand" onClick={() => setOpen(false)}>
-            PediMaster
+          PediMaster
         </NavLink>
 
         {/* Botón hamburguesa (mobile) */}
@@ -34,19 +36,57 @@ export default function Navbar() {
             Inicio
           </NavLink>
 
-          {/* Ejemplo de futuras páginas públicas
-          <NavLink to="/menu" className={linkClass} onClick={() => setOpen(false)}>
-            Menú
-          </NavLink>
-          */}
-
-          <NavLink
-            to="/admin/foods/new"
-            className={linkClass}
-            onClick={() => setOpen(false)}
-          >
-            Cargar comida
-          </NavLink>
+          {user ? (
+            <>
+              {/* Solo visible si está logueado */}
+              <NavLink
+                to="/admin/foods"
+                className={linkClass}
+                onClick={() => setOpen(false)}
+              >
+                Comidas
+              </NavLink>
+              <NavLink
+                to="/admin/orders"
+                className={linkClass}
+                onClick={() => setOpen(false)}
+              >
+                Pedidos
+              </NavLink>
+              <NavLink
+                to="/admin/foods/new"
+                className={linkClass}
+                onClick={() => setOpen(false)}
+              >
+                Cargar comida
+              </NavLink>
+              {user && <span style={{ color:"#86efac", fontSize:12 }}>Hola, {user.username}</span>}
+              <button
+                className="nav__link"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#9ca3af",
+                }}
+                onClick={() => {
+                  logout();
+                  setOpen(false);
+                }}
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            // Si no hay usuario logueado → mostrar Login
+            <NavLink
+              to="/login"
+              className={linkClass}
+              onClick={() => setOpen(false)}
+            >
+              Login
+            </NavLink>
+          )}
 
           {/* CTA / botón derecho */}
           <a

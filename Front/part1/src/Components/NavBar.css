@@ -7,20 +7,15 @@
 }
 
 .nav{
-  position: sticky; top:0; z-index: 50;
-  background: rgba(15, 23, 42, .85);
+  position: sticky;
+  top: 0;
+  z-index: 50;        /* para que quede arriba */
+  background: rgba(15,23,42,.85);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--nav-border);
+  border-bottom: 1px solid #1f2937;
 }
+.nav__inner{ width:100%; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }
 
-.nav__inner{
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
 .nav__brand{
   font-weight: 800;
