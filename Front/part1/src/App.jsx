@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./Components/NavBar";
 import Home from "./Pages/Head";
-//import AdminFoods from "./Pages/AdminFoods";
+import AdminFoods from "./Pages/AdminFoods";
 //import AdminOrders from "./Pages/AdminOrders";
 import FoodForm from "./Pages/FoodForm";
 import Login from "./Pages/login";
@@ -21,9 +21,9 @@ export default function App() {
 
         {/* Protegido */}
         <Route element={<ProtectedRoute />}>
-          
+          <Route path="/admin/foods" element={<AdminFoods />} />
           <Route path="/admin/foods/new" element={<FoodForm />} />
-          
+         
           <Route path="/admin" element={<Navigate to="/admin/foods" replace />} />
         </Route>
 
