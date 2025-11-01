@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 import { useAuth } from "../auth/useAuth"; // ✅ importa el contexto
+import logo from "../assets/LogoPedimaster2.png";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -13,8 +14,8 @@ export default function Navbar() {
   return (
     <header className="nav">
       <div className="nav__inner">
-        {/* Logo / Marca */}
         <NavLink to="/" className="nav__brand" onClick={() => setOpen(false)}>
+        <img src={logo} alt="PediMaster" className="nav__logo" />
           PediMaster
         </NavLink>
 
