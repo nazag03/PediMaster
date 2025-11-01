@@ -1,0 +1,7 @@
+.prueba {
+  background-color: #ff8000; /* un fondo cálido */
+  min-height: 100vh;         /* ocupa toda la pantalla */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

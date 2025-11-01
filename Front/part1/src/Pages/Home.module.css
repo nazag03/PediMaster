@@ -1,0 +1,147 @@
+.home {
+  font-family: "Inter", system-ui, sans-serif;
+  color: #222;
+  background: #fffdf9;
+  min-height: 100vh;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(120deg, #ff6600, #ff914d);
+  color: #fff;
+  text-align: center;
+  padding: 60px 20px;
+  border-bottom: 4px solid #ffb07c;
+}
+.heroContent h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+.heroContent p {
+  margin: 10px 0 25px;
+  font-size: 1.1rem;
+  opacity: 0.95;
+}
+
+/* BOTONES */
+.btnPrimary {
+  background: #fff;
+  color: #ff6600;
+  font-weight: 800;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(255, 102, 0, 0.3);
+}
+
+/* BÚSQUEDA */
+.searchSection {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+.searchInput {
+  padding: 10px 14px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 10px;
+  border: 1.5px solid #ffb07c;
+  background: #fff7f0;
+  color: #222;
+  font-size: 1rem;
+}
+.searchInput:focus {
+  border-color: #ff6600;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
+}
+
+/* SECCIONES */
+.section {
+  padding: 30px 20px;
+}
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ff6600;
+  margin-bottom: 18px;
+}
+
+/* GRID (usa FoodCard adentro) */
+.grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+/* INFO */
+.infoSection {
+  background: #fff7f0;
+  padding: 40px 20px;
+}
+.infoGrid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.map {
+  flex: 1;
+  min-width: 280px;
+  height: 200px;
+  border: none;
+  border-radius: 12px;
+}
+.horarioList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.horarioList li {
+  margin-bottom: 6px;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #444;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+
+/* FAB WhatsApp */
+.fabWA {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: #25d366;
+  color: #fff;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
+  transition: transform 0.2s ease;
+}
+.fabWA:hover {
+  transform: scale(1.1);
+}
+
+/* Texto */
+.muted {
+  text-align: center;
+  color: #888;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}

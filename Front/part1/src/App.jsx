@@ -1,11 +1,16 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./Components/NavBar";
-import Home from "./Pages/Head";
+import Home from "./Pages/Home";
 import AdminFoods from "./Pages/AdminFoods";
 //import AdminOrders from "./Pages/AdminOrders";
 import FoodForm from "./Pages/FoodForm";
 import Login from "./Pages/login";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import Pruebas from "./Pages/Pruebas"
+import "./App.css";
+
+
+
 
 export default function App() {
   return (
@@ -23,7 +28,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/admin/foods" element={<AdminFoods />} />
           <Route path="/admin/foods/new" element={<FoodForm />} />
-         
+          <Route path="/admin/pruebas" element={<Pruebas />} />
           <Route path="/admin" element={<Navigate to="/admin/foods" replace />} />
         </Route>
 
