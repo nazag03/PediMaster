@@ -55,7 +55,7 @@ export default function Navbar() {
                 Pedidos
               </NavLink>
               <NavLink
-                to="/admin/foods/new"
+                to="/carrito"
                 className={linkClass}
                 onClick={() => setOpen(false)}
               >
@@ -99,6 +99,7 @@ export default function Navbar() {
           >
             WhatsApp
           </a>
+          
         </nav>
       </div>
     </header>

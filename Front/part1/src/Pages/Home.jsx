@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { fetchFoods } from "../Components/Api";
-import FoodCard from "../components/FoodCard"; // 👈 usamos tu componente
+import FoodCard from "../components/FoodCard"; // 👈 no se modifica
+import { useCart } from "../context/CartContext";// 👈 para agregar al carrito
 import styles from "./Home.module.css";
 
 export default function Home() {
   const [foods, setFoods] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [loading, setLoading] = useState(true);
+  const { addItem, count, subtotal } = useCart(); // 👈 usamos el carrito
 
   const rotiseria = {
     nombre: "Rotisería Don Sabor",
@@ -30,15 +33,15 @@ export default function Home() {
     })();
   }, []);
 
-  // Función de orden de categorías: Promos -> resto -> Bebidas
+  // Orden de categorías: Promos -> resto -> Bebidas
   const orderKey = (catName = "") => {
-    const n = catName.toLowerCase();
+    const n = (catName || "").toLowerCase();
     if (n.includes("promo")) return 0;
     if (n.includes("bebida")) return 2;
     return 1;
   };
 
-  // Agrupar por categoría + filtrar búsqueda + ordenar categorías
+  // Agrupar por categoría + filtrar búsqueda + ordenar
   const grupos = useMemo(() => {
     const q = busqueda.trim().toLowerCase();
     const list = q
@@ -56,22 +59,22 @@ export default function Home() {
       map.get(key).push(f);
     }
 
-    // ordenar items dentro de cada grupo (opcional)
     for (const arr of map.values()) {
       arr.sort((a, b) => a.name.localeCompare(b.name, "es"));
     }
 
-    // ordenar grupos por prioridad
     return Array.from(map.entries()).sort((a, b) => {
       const oa = orderKey(a[0]);
       const ob = orderKey(b[0]);
-      if (oa !== ob) return oa - ob; // por prioridad
-      return a[0].localeCompare(b[0], "es"); // alfabético dentro del mismo bloque
+      if (oa !== ob) return oa - ob;
+      return a[0].localeCompare(b[0], "es");
     });
   }, [foods, busqueda]);
 
   const waBase = `https://wa.me/${rotiseria.telefonoWhatsApp}?text=`;
-  const msgBase = encodeURIComponent(`Hola! Quiero hacer un pedido de ${rotiseria.nombre}.`);
+  const msgBase = encodeURIComponent(
+    `Hola! ¿Me pasás el menú del día de ${rotiseria.nombre}?`
+  );
 
   return (
     <div className={styles.home}>
@@ -80,17 +83,14 @@ export default function Home() {
         <div className={styles.heroContent}>
           <h1>{rotiseria.nombre}</h1>
           <p>Comida casera, porciones abundantes y entrega rápida.</p>
-          <button
+          <a
             className={styles.btnPrimary}
-            onClick={() =>
-              window.open(
-                `${waBase}${encodeURIComponent("Hola! ¿Me pasás el menú del día?")}`,
-                "_blank"
-              )
-            }
+            href={`${waBase}${msgBase}`}
+            target="_blank"
+            rel="noreferrer"
           >
             Pedir por WhatsApp
-          </button>
+          </a>
         </div>
       </header>
 
@@ -114,7 +114,19 @@ export default function Home() {
             <h2 className={styles.sectionTitle}>{cat}</h2>
             <div className={styles.grid}>
               {items.map((item) => (
-                <FoodCard key={item.id} item={item} />
+                <div key={item.id} className={styles.cardWrap}>
+                  <FoodCard item={item} />
+                  {/* Botón agregado SIN tocar el componente */}
+                  <button
+                    type="button"
+                    className={styles.addBtn}
+                    onClick={() => addItem(item, 1)}
+                    aria-label={`Agregar ${item.name} al carrito`}
+                    title="Agregar al carrito"
+                  >
+                    + Agregar
+                  </button>
+                </div>
               ))}
             </div>
           </section>
@@ -148,20 +160,32 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className={styles.footer}>
-        <span>© {new Date().getFullYear()} {rotiseria.nombre}</span>
+        <span>
+          © {new Date().getFullYear()} {rotiseria.nombre}
+        </span>
       </footer>
 
-      {/* WhatsApp FAB */}
-      <a
-        className={styles.fabWA}
-        href={waBase + msgBase}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Pedir por WhatsApp"
-        title="Pedir por WhatsApp"
-      >
-        💬
-      </a>
+    {/* 🛒 FAB Carrito flotante */}
+{/* 🛒 FAB Carrito flotante */}
+<Link
+  to="/carrito"
+  className={styles.cartFloating}
+  aria-label="Ver carrito"
+  title="Ver carrito"
+>
+  <span className={styles.cartEmoji}>🛒</span>
+  {count > 0 && <span className={styles.cartBadge}>{count}</span>}
+</Link>
+
+
+
+
+      {/* Subtotal flotante opcional junto al FAB */}
+      {count > 0 && (
+        <div className={styles.fabSubtot}>
+          ${subtotal.toLocaleString("es-AR")}
+        </div>
+      )}
     </div>
   );
 }

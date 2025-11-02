@@ -9,7 +9,10 @@
   flex-direction: column;
   max-width: 280px;
   margin: 4px;
+  justify-content: space-between;
+  height: 100%;
 }
+
 
 .card:hover {
   transform: translateY(-3px);

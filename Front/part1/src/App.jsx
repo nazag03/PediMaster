@@ -8,7 +8,7 @@ import Login from "./Pages/login";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import Pruebas from "./Pages/Pruebas"
 import "./App.css";
-
+import CartPage from "./pages/CartPage";
 
 
 
@@ -23,6 +23,7 @@ export default function App() {
         {/* Público */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/carrito" element={<CartPage />} />
 
         {/* Protegido */}
         <Route element={<ProtectedRoute />}>
