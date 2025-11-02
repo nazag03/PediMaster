@@ -1,132 +1,183 @@
-/* Contenedor general */
+/* Página */
 .af {
-  padding: 16px;
+  font-family: "Inter", system-ui, sans-serif;
+  color: #222;
+  background: #fffdf9;
+  min-height: 100vh;
+  width: 100%;
+  padding: 24px 0 60px;
 }
 
-/* Topbar */
+/* Topbar centrada */
 .topbar {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  padding: 0 20px;
+
   display: flex;
-  gap: 12px;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .title {
-  margin: 0;
+  font-size: 1.8rem;
   font-weight: 800;
-  font-size: 1.6rem;
-  color: #111;
+  color: #ff6600;
+  margin: 0;
 }
 
+/* Acciones (buscador + botón) */
 .actions {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-/* Buscador – estilo naranja coherente */
 .search {
-  padding: 10px 14px;
-  min-width: 280px;
+  padding: 10px 12px;
+  min-width: 260px;
+  max-width: 420px;
   border-radius: 10px;
   border: 1.5px solid #ffb07c;
   background: #fff7f0;
   color: #222;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  font-size: 0.95rem;
   outline: none;
-}
-.search::placeholder {
-  color: #b36b33;
-  opacity: 0.7;
+  transition: box-shadow .15s ease, border-color .15s ease;
 }
 .search:focus {
-  border-color: #ff6600;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
+  border-color: #ff7a00;
+  box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.20);
 }
+
+/* Botones */
+.btnPrimary {
+  background: #ff7a00;
+  color: #fff;
+  font-weight: 800;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.btnPrimary:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 6px 14px rgba(255, 122, 0, .25); }
+.btnPrimary:active { transform: translateY(0); }
+
+.btnDanger {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: filter .15s ease, transform .1s ease, box-shadow .15s ease;
+}
+.btnDanger:hover { filter: brightness(1.05); box-shadow: 0 6px 14px rgba(239, 68, 68, .25); }
+.btnDanger:disabled { opacity: .6; cursor: not-allowed; box-shadow: none; }
 
 /* Mensajes */
 .muted {
-  color: #6b7280;
-  margin-top: 12px;
+  text-align: center;
+  color: #888;
+  font-size: 0.95rem;
+  margin-top: 10px;
 }
 
-/* Grupos/categorías */
+/* Contenedor de grupos centrado */
 .groups {
-  display: grid;
-  gap: 24px;
-  margin-top: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;         /* centra */
+  padding: 0 20px;
 }
-.group {}
+
+/* Grupo (bloque de categoría) */
+.group {
+  background: #fff;
+  border-radius: 16px;
+  margin: 28px 0;
+  padding: 24px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  transition: transform .2s ease;
+}
+
+/* El "hover" que escala puede romper en mobile; lo limitamos a dispositivos con puntero */
+@media (hover: hover) {
+  .group:hover { transform: scale(1.01); }
+}
+
 .groupTitle {
-  margin: 0 0 10px;
+  font-size: 1.2rem;
   font-weight: 800;
-  color: #222;
+  color: #ff6600;
+  margin: 0 0 18px;
+  display: inline-block;
+  border-bottom: 3px solid #ffb07c;
+  padding-bottom: 4px;
 }
 
 /* Grid de cards */
 .grid {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  align-items: start;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  align-items: stretch;
 }
 
-/* Wrapper para botones flotantes */
+/* Cards uniformes */
 .cardWrap {
   position: relative;
+  height: 100%;
+  min-width: 0; /* evita desbordes en grid */
 }
 
-/* Botones flotantes por card */
+/* Hace que el componente interno (FoodCard) se estire */
+.cardWrap > :first-child {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Botones dentro de la card (debajo de la tarjeta) */
 .cardBtns {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  right: 10px;
+  bottom: 10px;
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 
-/* Botón primario (link “Nueva”) */
-.btnPrimary {
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #ff6600, #ff914d);
-  border: none;
-  color: #fff;
-  font-weight: 800;
-  text-decoration: none;
-  transition: transform .15s ease, box-shadow .2s ease;
-}
-.btnPrimary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(255, 102, 0, 0.3);
+/* Responsivo */
+@media (max-width: 1024px) {
+  .title { font-size: 1.6rem; }
 }
 
-/* Botón peligro (quitar) */
-.btnDanger {
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: #3f1d1d;
-  border: 1px solid #7f1d1d;
-  color: #fecaca;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform .1s ease, box-shadow .2s ease;
-}
-.btnDanger:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(127, 29, 29, 0.25);
-}
-.btnDanger:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-}
-
-/* Responsive */
-@media (max-width: 560px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+@media (max-width: 860px) {
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
+  .actions {
+    justify-content: space-between;
+  }
+  .search {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .group { padding: 18px; }
 }
