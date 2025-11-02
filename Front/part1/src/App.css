@@ -34,3 +34,15 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.3;
   color: var(--text);
 }
+
+/* RESET BÁSICO */
+* { box-sizing: border-box; }
+html, body, #root {
+  margin: 0;
+  padding: 0;            /* 👈 evita ese padding-top 430px */
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;     /* 👈 evita scroll horizontal */
+}
+img, iframe { max-width: 100%; display: block; }
+

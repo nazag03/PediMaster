@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchFoods } from "../Components/Api";
-import FoodCard from "../components/FoodCard"; // 👈 no se modifica
-import { useCart } from "../context/CartContext";// 👈 para agregar al carrito
+import FoodCard from "../components/FoodCard";
+import { useCart } from "../context/CartContext";
 import styles from "./Home.module.css";
 
 export default function Home() {
   const [foods, setFoods] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [loading, setLoading] = useState(true);
-  const { addItem, count, subtotal } = useCart(); // 👈 usamos el carrito
+  const { addItem, count, subtotal } = useCart();
 
   const rotiseria = {
     nombre: "Rotisería Don Sabor",
@@ -33,7 +33,6 @@ export default function Home() {
     })();
   }, []);
 
-  // Orden de categorías: Promos -> resto -> Bebidas
   const orderKey = (catName = "") => {
     const n = (catName || "").toLowerCase();
     if (n.includes("promo")) return 0;
@@ -41,7 +40,6 @@ export default function Home() {
     return 1;
   };
 
-  // Agrupar por categoría + filtrar búsqueda + ordenar
   const grupos = useMemo(() => {
     const q = busqueda.trim().toLowerCase();
     const list = q
@@ -94,93 +92,89 @@ export default function Home() {
         </div>
       </header>
 
-      {/* BÚSQUEDA */}
-      <section className={styles.searchSection}>
-        <input
-          type="search"
-          placeholder="🔎 Buscar platos o bebidas..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-          className={styles.searchInput}
-        />
-      </section>
-
-      {/* LISTADO */}
-      {loading ? (
-        <p className={styles.muted}>Cargando menú...</p>
-      ) : (
-        grupos.map(([cat, items]) => (
-          <section key={cat} className={styles.section}>
-            <h2 className={styles.sectionTitle}>{cat}</h2>
-            <div className={styles.grid}>
-              {items.map((item) => (
-                <div key={item.id} className={styles.cardWrap}>
-                  <FoodCard item={item} />
-                  {/* Botón agregado SIN tocar el componente */}
-                  <button
-                    type="button"
-                    className={styles.addBtn}
-                    onClick={() => addItem(item, 1)}
-                    aria-label={`Agregar ${item.name} al carrito`}
-                    title="Agregar al carrito"
-                  >
-                    + Agregar
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-        ))
-      )}
-
-      {/* INFO */}
-      <section className={styles.infoSection} id="info">
-        <h2 className={styles.sectionTitle}>Info y horarios</h2>
-        <div className={styles.infoGrid}>
-          <div>
-            <h3>Dirección</h3>
-            <p>{rotiseria.direccion}</p>
-            <h3>Horarios</h3>
-            <ul className={styles.horarioList}>
-              {rotiseria.horario.map((h, i) => (
-                <li key={i}>
-                  <strong>{h.dias}:</strong> {h.horas}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <iframe
-            title="Mapa"
-            src={rotiseria.mapsEmbed}
-            loading="lazy"
-            className={styles.map}
+      {/* CONTENIDO CENTRAL */}
+      <main className={styles.content}>
+        {/* BÚSQUEDA */}
+        <section className={styles.searchSection}>
+          <input
+            type="search"
+            placeholder="🔎 Buscar platos o bebidas..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className={styles.searchInput}
           />
-        </div>
-      </section>
+        </section>
+
+        {/* LISTADO */}
+        {loading ? (
+          <p className={styles.muted}>Cargando menú...</p>
+        ) : (
+          grupos.map(([cat, items]) => (
+            <section key={cat} className={styles.section}>
+              <h2 className={styles.sectionTitle}>{cat}</h2>
+              <div className={styles.grid}>
+                {items.map((item) => (
+                  <div key={item.id} className={styles.cardWrap}>
+                    <FoodCard item={item} />
+                    <button
+                      type="button"
+                      className={styles.addBtn}
+                      onClick={() => addItem(item, 1)}
+                      aria-label={`Agregar ${item.name} al carrito`}
+                      title="Agregar al carrito"
+                    >
+                      + Agregar
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))
+        )}
+
+        {/* INFO */}
+        <section className={styles.infoSection} id="info">
+          <h2 className={styles.sectionTitle}>Info y horarios</h2>
+          <div className={styles.infoGrid}>
+            <div>
+              <h3>Dirección</h3>
+              <p>{rotiseria.direccion}</p>
+              <h3>Horarios</h3>
+              <ul className={styles.horarioList}>
+                {rotiseria.horario.map((h, i) => (
+                  <li key={i}>
+                    <strong>{h.dias}:</strong> {h.horas}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <iframe
+              title="Mapa"
+              src={rotiseria.mapsEmbed}
+              loading="lazy"
+              className={styles.map}
+            />
+          </div>
+        </section>
+      </main>
 
       {/* FOOTER */}
       <footer className={styles.footer}>
-        <span>
-          © {new Date().getFullYear()} {rotiseria.nombre}
-        </span>
+        <span>© {new Date().getFullYear()} {rotiseria.nombre}</span>
       </footer>
 
-    {/* 🛒 FAB Carrito flotante */}
-{/* 🛒 FAB Carrito flotante */}
-<Link
-  to="/carrito"
-  className={styles.cartFloating}
-  aria-label="Ver carrito"
-  title="Ver carrito"
->
-  <span className={styles.cartEmoji}>🛒</span>
-  {count > 0 && <span className={styles.cartBadge}>{count}</span>}
-</Link>
+      {/* 🛒 FAB Carrito */}
+      <Link
+        to="/carrito"
+        className={styles.cartFloating}
+        aria-label="Ver carrito"
+        title="Ver carrito"
+      >
+        <span className={styles.cartEmoji}>🛒</span>
+        {count > 0 && <span className={styles.cartBadge}>{count}</span>}
+      </Link>
 
-
-
-
-      {/* Subtotal flotante opcional junto al FAB */}
+      {/* Subtotal flotante */}
       {count > 0 && (
         <div className={styles.fabSubtot}>
           ${subtotal.toLocaleString("es-AR")}

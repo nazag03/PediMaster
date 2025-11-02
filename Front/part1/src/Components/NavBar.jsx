@@ -1,28 +1,28 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import "./Navbar.css";
-import { useAuth } from "../auth/useAuth"; // ✅ importa el contexto
+import { useAuth } from "../auth/useAuth";
 import logo from "../assets/LogoPedimaster2.png";
+import styles from "./Navbar.module.css";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, logout } = useAuth(); // ✅ obtenemos el usuario logueado y logout()
+  const { user, logout } = useAuth();
 
   const linkClass = ({ isActive }) =>
-    "nav__link" + (isActive ? " nav__link--active" : "");
+    isActive ? `${styles.nav__link} ${styles.nav__linkActive}` : styles.nav__link;
 
   return (
-    <header className="nav">
-      <div className="nav__inner">
-        <NavLink to="/" className="nav__brand" onClick={() => setOpen(false)}>
-        <img src={logo} alt="PediMaster" className="nav__logo" />
-          PediMaster
+    <header className={styles.nav}>
+      <div className={styles.nav__inner}>
+        <NavLink to="/" className={styles.nav__brand} onClick={() => setOpen(false)}>
+          <img src={logo} alt="PediMaster" className={styles.nav__logo} />
+          <span>PediMaster</span>
         </NavLink>
 
         {/* Botón hamburguesa (mobile) */}
         <button
-          className="nav__burger"
-          aria-label="Abrir menú"
+          className={styles.nav__burger}
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
@@ -32,16 +32,16 @@ export default function Navbar() {
         </button>
 
         {/* Links */}
-        <nav className={"nav__links " + (open ? "is-open" : "")}>
+        <nav className={`${styles.nav__links} ${open ? styles.isOpen : ""}`}>
           <NavLink to="/" className={linkClass} onClick={() => setOpen(false)}>
             Inicio
           </NavLink>
 
           {user ? (
             <>
-              {/* Solo visible si está logueado */}
               <NavLink
                 to="/admin/foods"
+                end
                 className={linkClass}
                 onClick={() => setOpen(false)}
               >
@@ -61,15 +61,13 @@ export default function Navbar() {
               >
                 Cargar comida
               </NavLink>
-              {user && <span style={{ color:"#86efac", fontSize:12 }}>Hola, {user.username}</span>}
+
+              <span className={styles.nav__hello}>
+                Hola, {user.username}
+              </span>
+
               <button
-                className="nav__link"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "#9ca3af",
-                }}
+                className={`${styles.nav__link} ${styles.asButton}`}
                 onClick={() => {
                   logout();
                   setOpen(false);
@@ -79,7 +77,6 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            // Si no hay usuario logueado → mostrar Login
             <NavLink
               to="/login"
               className={linkClass}
@@ -89,9 +86,8 @@ export default function Navbar() {
             </NavLink>
           )}
 
-          {/* CTA / botón derecho */}
           <a
-            className="nav__cta"
+            className={styles.nav__cta}
             href="https://wa.me/5493512345678"
             target="_blank"
             rel="noreferrer"
@@ -99,7 +95,6 @@ export default function Navbar() {
           >
             WhatsApp
           </a>
-          
         </nav>
       </div>
     </header>

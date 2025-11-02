@@ -3,9 +3,20 @@
   color: #222;
   background: #fffdf9;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+  background-image: url(https://static.vecteezy.com/system/resources/previews/002/282/910/non_2x/elegant-white-background-free-vector.jpg); /* 👈 tu imagen */
+  background-repeat: no-repeat;        /* no se repite */
+  background-position: center center;  /* centrada */
+  background-size: cover;              /* ocupa todo el espacio */
+  background-attachment: fixed;   
+}
+
+/* Contenedor central */
+.content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* HERO */
@@ -32,9 +43,9 @@
   opacity: 0.95;
 }
 
-/* BOTONES */
+/* BOTÓN NARANJA */
 .btnPrimary {
-  background: #ff7a00; /* 🔶 Naranja */
+  background: #ff7a00;
   color: #fff;
   font-weight: 800;
   border: none;
@@ -55,7 +66,6 @@
   display: flex;
   justify-content: center;
   padding: 30px 20px;
-  width: 100%;
 }
 .searchInput {
   padding: 10px 14px;
@@ -73,14 +83,13 @@
   box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
 }
 
-/* SECCIONES DE CATEGORÍAS */
+/* SECCIONES */
 .section {
   width: 100%;
-  max-width: 1200px;
   padding: 40px 20px;
   background: #fff;
   border-radius: 16px;
-  margin-bottom: 40px;
+  margin: 40px 0;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
 }
@@ -111,8 +120,6 @@
   position: relative;
   height: 100%;
 }
-
-/* ⬇️ antes era `> *` — ahora solo el PRIMER hijo (la card) */
 .cardWrap > :first-child {
   height: 100%;
   display: flex;
@@ -120,8 +127,7 @@
   justify-content: space-between;
 }
 
-
-/* Botón agregar */
+/* BOTÓN AGREGAR */
 .addBtn {
   position: absolute;
   right: 10px;
@@ -133,6 +139,7 @@
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
 }
 .addBtn:hover {
   background: #ff7300;
@@ -147,6 +154,7 @@
   padding: 60px 20px;
   width: 100%;
   text-align: center;
+  margin: 40px 0;
 }
 .infoGrid {
   display: flex;
@@ -180,7 +188,6 @@
   color: #444;
   border-top: 1px solid #eee;
   background: #fff;
-  width: 100%;
 }
 
 /* FAB CARRITO */
