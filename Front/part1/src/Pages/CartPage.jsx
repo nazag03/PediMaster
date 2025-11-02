@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useOrders } from "../context/OrderContext";
 import { ROTI, waBase } from "../config/roti";
 import styles from "./CartPage.module.css";
 
 export default function CartPage() {
   const { items, increment, decrement, removeItem, clear, subtotal } = useCart();
+  const { create } = useOrders(); // 👈 NUEVO
   const [nota, setNota] = useState("");
   const navigate = useNavigate();
 
@@ -24,6 +26,39 @@ export default function CartPage() {
   }, [items, nota, subtotal]);
 
   const canSend = items.length > 0;
+
+  // 👇 NUEVO: crea el pedido y abre WhatsApp sin ser bloqueado
+  async function handleSend() {
+    if (!canSend) return;
+
+    // abrir ventana primero para evitar bloqueos del navegador
+    const win = window.open("", "_blank");
+
+    try {
+      // 1) Guardar el pedido (quedan en localStorage vía OrdersContext)
+      await create({
+        items: items.map(({ id, name, qty, price }) => ({ id, name, qty, price })),
+        subtotal,
+        customer: null, // si luego agregás nombre/teléfono, ponelos acá
+        note: nota || "",
+      });
+
+      // 2) Armar URL de WhatsApp y navegar la ventana ya abierta
+      const url = `${waBase()}${waText}`;
+      if (win) {
+        win.location.href = url;
+      } else {
+        window.open(url, "_blank");
+      }
+
+      // 3) (Opcional) limpiar carrito
+      // clear();
+    } catch (err) {
+      console.error(err);
+      if (win) win.close();
+      alert("No se pudo crear el pedido. Intentá nuevamente.");
+    }
+  }
 
   return (
     <div className={styles.wrap}>
@@ -56,14 +91,17 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
+
                 <div className={styles.controls}>
                   <button onClick={() => decrement(it.id)} className={styles.step}>−</button>
                   <span className={styles.qty}>{it.qty}</span>
                   <button onClick={() => increment(it.id)} className={styles.step}>＋</button>
                 </div>
+
                 <div className={styles.lineTotal}>
                   ${ (it.price * it.qty).toLocaleString("es-AR") }
                 </div>
+
                 <button
                   className={styles.remove}
                   onClick={() => removeItem(it.id)}
@@ -94,16 +132,16 @@ export default function CartPage() {
 
           <div className={styles.actions}>
             <button className={styles.btnGhost} onClick={clear}>Vaciar carrito</button>
-            <a
+
+            {/* 👇 ahora es un botón que dispara handleSend */}
+            <button
               className={styles.btnPrimary}
-              href={canSend ? `${waBase()}${waText}` : "#"}
-              target="_blank"
-              rel="noreferrer"
+              onClick={handleSend}
+              disabled={!canSend}
               aria-disabled={!canSend}
-              onClick={(e) => { if (!canSend) e.preventDefault(); }}
             >
               Enviar por WhatsApp
-            </a>
+            </button>
           </div>
         </>
       )}
