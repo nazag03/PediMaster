@@ -28,7 +28,8 @@ export default function Home() {
     (async () => {
       setLoading(true);
       const data = await fetchFoods();
-      setFoods(data);
+      // 👇 default: true si no viene definido
+      setFoods(data.map(f => ({ ...f, is_available: f.is_available ?? true })));
       setLoading(false);
     })();
   }, []);
@@ -41,14 +42,17 @@ export default function Home() {
   };
 
   const grupos = useMemo(() => {
+    // 👇 Base: SOLO visibles/en stock
+    const base = foods.filter(f => f.is_available !== false);
+
     const q = busqueda.trim().toLowerCase();
     const list = q
-      ? foods.filter(
+      ? base.filter(
           (f) =>
             f.name.toLowerCase().includes(q) ||
             f?.description?.toLowerCase().includes(q)
         )
-      : foods;
+      : base;
 
     const map = new Map();
     for (const f of list) {

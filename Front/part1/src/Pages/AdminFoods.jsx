@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchFoods, deleteFood } from "../Components/Api";
+import { fetchFoods, deleteFood, toggleFoodAvailability } from "../Components/Api";
 import { Link } from "react-router-dom";
 import FoodCard from "../components/FoodCard";
-import styles from "./AdminFoods.module.css"; // 👈 módulos
+import { Eye, EyeOff } from "lucide-react"; // 👈 íconos livianos y lindos
+import styles from "./AdminFoods.module.css";
+
 
 export default function AdminFoods() {
   const [foods, setFoods] = useState([]);
@@ -14,13 +16,28 @@ export default function AdminFoods() {
     setLoading(true);
     try {
       const data = await fetchFoods();
-      setFoods(data);
+      // aseguramos que cada comida tenga is_available true por defecto
+      setFoods(data.map(f => ({ ...f, is_available: f.is_available ?? true })));
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => { load(); }, []);
+
+
+
+  const toggleVisibility = async (id) => {
+  // Optimista
+  setFoods(prev => prev.map(f => f.id === id ? { ...f, is_available: !f.is_available } : f));
+  try {
+    await toggleFoodAvailability(id); // 👈 persistís en la API mock
+  } catch {
+    // rollback si falla
+    setFoods(prev => prev.map(f => f.id === id ? { ...f, is_available: !f.is_available } : f));
+    alert("No se pudo cambiar la visibilidad");
+  }
+};
 
   const filtered = useMemo(() => {
     const txt = q.trim().toLowerCase();
@@ -81,9 +98,23 @@ export default function AdminFoods() {
               <h2 className={styles.groupTitle}>{cat}</h2>
               <div className={styles.grid}>
                 {items.map(f => (
-                  <div key={f.id} className={styles.cardWrap}>
+                  <div
+                    key={f.id}
+                    className={`${styles.cardWrap} ${!f.is_available ? styles.hiddenCard : ""}`}
+                  >
                     <FoodCard item={f} />
+
                     <div className={styles.cardBtns}>
+                      {/* 👁️ Botón para mostrar/ocultar */}
+                      <button
+                        onClick={() => toggleVisibility(f.id)}
+                        className={styles.btnSecondary}
+                        title={f.is_available ? "Ocultar del menú" : "Mostrar en el menú"}
+                      >
+                        {f.is_available ? <Eye size={18} /> : <EyeOff size={18} />}
+                      </button>
+
+                      {/* ❌ Botón para eliminar */}
                       <button
                         onClick={() => onRemove(f.id)}
                         disabled={removing === f.id}

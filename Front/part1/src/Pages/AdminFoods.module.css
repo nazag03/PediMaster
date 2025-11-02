@@ -181,3 +181,27 @@
   .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
   .group { padding: 18px; }
 }
+
+.cardBtns {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.btnSecondary {
+  background: #ddd;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btnSecondary:hover {
+  background: #bbb;
+}
+
+.hiddenCard {
+  opacity: 0.4;
+  filter: grayscale(80%);
+}
