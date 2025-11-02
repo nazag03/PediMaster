@@ -1,0 +1,117 @@
+.page {
+  font-family: "Inter", system-ui, sans-serif;
+  color: #222;
+  background: #fffdf9;
+  min-height: 100vh;
+  width: 100%;
+  padding: 24px 0 60px;
+}
+
+/* Contenedor centrado */
+.topbar, .tableWrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  padding: 0 20px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ff6600;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search {
+  padding: 10px 12px;
+  min-width: 260px;
+  max-width: 420px;
+  border-radius: 10px;
+  border: 1.5px solid #ffb07c;
+  background: #fff7f0;
+  color: #222;
+  font-size: 0.95rem;
+}
+.search:focus { outline: none; border-color: #ff7a00; box-shadow: 0 0 0 3px rgba(255, 122, 0, .2); }
+
+.select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #ffb07c;
+  background: #fff;
+  color: #222;
+}
+
+/* Tabla */
+.tableWrap { overflow-x: auto; }
+.table {
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  border-collapse: collapse;
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+}
+
+.table th, .table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0e2d9;
+  vertical-align: top;
+  text-align: left;
+}
+.table thead th {
+  font-weight: 800;
+  color: #ff6600;
+  background: #fff7f0;
+}
+.table tr:last-child td { border-bottom: none; }
+
+.idMono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: #555; }
+.itemsList { margin: 0; padding-left: 18px; }
+
+/* Estado */
+.badge {
+  font-size: 0.8rem;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-weight: 800;
+}
+.badgePending { background: #fff3cd; color: #8a6d3b; border: 1px solid #ffe08a; }
+.badgeCompleted { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+.badgeCanceled { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* Acciones */
+.thActions, .tdActions { text-align: right; white-space: nowrap; }
+.tdActions { display: flex; gap: 8px; justify-content: flex-end; }
+
+.btnOk {
+  background: #10b981; color:#fff; border: none; border-radius: 999px; padding: 8px 12px; font-weight: 800; cursor: pointer;
+}
+.btnWarn {
+  background: #f59e0b; color:#111; border: none; border-radius: 999px; padding: 8px 12px; font-weight: 800; cursor: pointer;
+}
+.btnDanger {
+  background: #ef4444; color:#fff; border: none; border-radius: 999px; padding: 8px 12px; font-weight: 800; cursor: pointer;
+}
+
+.muted { color: #888; text-align: center; }
+
+/* Responsive */
+@media (max-width: 860px) {
+  .title { font-size: 1.6rem; }
+  .tdActions { flex-wrap: wrap; }
+}

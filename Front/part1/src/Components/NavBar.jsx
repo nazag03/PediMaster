@@ -48,7 +48,7 @@ export default function Navbar() {
                 Comidas
               </NavLink>
               <NavLink
-                to="/carrito"
+                to="/admin/pedidos"
                 className={linkClass}
                 onClick={() => setOpen(false)}
               >

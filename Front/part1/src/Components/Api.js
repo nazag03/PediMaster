@@ -336,3 +336,50 @@ export async function createCategory(name) {
   _categories.push(created);
   return created;
 }
+
+// === PEDIDOS: localStorage fallback ===
+const ORDERS_KEY = "pm_orders_v1";
+
+function readOrdersLS() {
+  try { return JSON.parse(localStorage.getItem(ORDERS_KEY)) || []; }
+  catch { return []; }
+}
+function writeOrdersLS(list) {
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(list));
+}
+
+export async function createOrder(order) {
+  // order: { items, subtotal, customer, note }
+  const list = readOrdersLS();
+  const id = crypto.randomUUID?.() || String(Date.now());
+  const now = new Date().toISOString();
+  const newOrder = {
+    id,
+    status: "pending", // pending | completed | canceled
+    createdAt: now,
+    updatedAt: now,
+    ...order,
+  };
+  list.unshift(newOrder);
+  writeOrdersLS(list);
+  return newOrder;
+}
+
+export async function fetchOrders() {
+  return readOrdersLS();
+}
+
+export async function updateOrderStatus(id, status) {
+  const list = readOrdersLS();
+  const i = list.findIndex(o => o.id === id);
+  if (i === -1) throw new Error("Pedido no encontrado");
+  list[i] = { ...list[i], status, updatedAt: new Date().toISOString() };
+  writeOrdersLS(list);
+  return list[i];
+}
+
+export async function deleteOrder(id) {
+  const list = readOrdersLS().filter(o => o.id !== id);
+  writeOrdersLS(list);
+  return true;
+}
