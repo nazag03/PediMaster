@@ -22,6 +22,11 @@
 /* HERO */
 .hero {
   background: linear-gradient(120deg, #ff6600, #ff914d);
+  background-image: url(https://media.istockphoto.com/id/694189032/es/foto/mano-held-barbacoa-favoritos.jpg?s=612x612&w=0&k=20&c=BeLHWQVmy6c4cC23f4IkF4i1sKqy8cAh47k9ghiIDjc=);
+    background-repeat: no-repeat;        /* no se repite */
+ /* centrada */
+  background-size: cover;              /* ocupa todo el espacio */
+  background-attachment: fixed; 
   color: #fff;
   text-align: center;
   padding: 60px 20px;
