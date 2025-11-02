@@ -1,6 +1,6 @@
 :root {
   --nav-bg: #ffffff;            /* fondo blanco */
-  --nav-bg-alt: #f8f9fb;        /* gris clarito */
+  --nav-bg-alt: #f1f1f1;        /* gris clarito */
   --nav-border: #e5e7eb;        /* borde sutil */
   --nav-text: #111;             /* texto negro */
   --nav-text-muted: #555;       /* texto gris */
@@ -90,7 +90,11 @@
   color: #fff !important;
   box-shadow: 0 2px 8px rgba(255, 122, 0, 0.3);
 }
-
+.nav__linkActive:hover {
+  background: #fff;
+  color: #ff6600 !important;
+  box-shadow: 0 2px 8px rgba(255, 122, 0, 0.3);
+}
 /* CTA */
 .nav__cta {
   text-decoration: none;
@@ -157,3 +161,4 @@
     color: #fff;
   }
 }
+
