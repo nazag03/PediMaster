@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "PediMaster",
+    "slug": "pedimaster",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/PedimasterLogo.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/PedimasterLogo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/PedimasterLogo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/PedimasterLogo.png"
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
