@@ -23,12 +23,12 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/carrito" element={<CartPage />} />
+        <Route path="/pruebas" element={<Pruebas />} />
 
         {/* Protegido */}
         <Route element={<ProtectedRoute />}>
           <Route path="/admin/foods" element={<AdminFoods />} />
           <Route path="/admin/foods/new" element={<FoodForm />} />
-          <Route path="/admin/pruebas" element={<Pruebas />} />
           <Route path="/admin/pedidos" element={<AdminOrders />} />
           <Route path="/admin" element={<Navigate to="/admin/foods" replace />} />
         </Route>
