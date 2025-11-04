@@ -9,9 +9,8 @@ namespace Infrastructure.Data
             : base(options)
         {
         }
-
-        public DbSet<SuperAdmin> SuperAdmin { get; set; }
-        public DbSet<Client> Clients { get; set; }
-
+        public DbSet<Food> Foods { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> orders { get; set; }
     }
 }
