@@ -17,6 +17,7 @@ namespace Domain.Entities
     }
     public class MenuFood
     {
+        public int MenuFoodId { get; set; }
         public int DayliMenuId { get; set; }
         public int FoodId { get; set; }
 

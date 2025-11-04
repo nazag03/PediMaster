@@ -1,8 +1,7 @@
-using Application.Interfaces;
-using Application.Services;
-using Domain.Interfaces;
+
+using Domain;
 using Infrastructure.Data;
-using Infrastructure.Repositories;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -17,8 +16,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
-builder.Services.AddScoped<ISuperAdmintService, SuperAdminService>();
 
 var app = builder.Build();
 

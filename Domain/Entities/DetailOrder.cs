@@ -15,7 +15,7 @@ namespace Domain.Entities
         public int Quantity { get; set; }
         public decimal Subtotal { get; set; }
 
-        public Order Order { get; set; } = null!;
-        public Food Food { get; set; } = null!;
+        public Order Orders { get; set; } = null!;
+        public Food Foods { get; set; } = null!;
     }
 }
