@@ -9,7 +9,8 @@ import Pruebas from "./Pages/Pruebas"
 import "./App.css";
 import CartPage from "./pages/CartPage";
 import AdminOrders from "./Pages/AdminOrders";
-
+import AdminCreateRestaurants from "./Pages/AdminCreateRestaurants";
+import AdminRestaurants from "./Pages/AdminRestaurants";
 
 export default function App() {
   return (
@@ -27,6 +28,8 @@ export default function App() {
 
         {/* Protegido */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/admin/restaurants" element={<AdminRestaurants />} />
+          <Route path="/admin/restaurants/new" element={<AdminCreateRestaurants />} />
           <Route path="/admin/foods" element={<AdminFoods />} />
           <Route path="/admin/foods/new" element={<FoodForm />} />
           <Route path="/admin/pedidos" element={<AdminOrders />} />
