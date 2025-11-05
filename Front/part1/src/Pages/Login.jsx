@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import styles from "./Login.module.css";
+import logo from "../assets/PedimasterLogo.png"
 
 export default function Login() {
   const { login, register, loginWithGoogle } = useAuth();
@@ -44,7 +45,7 @@ export default function Login() {
     <div className={styles.wrap}>
       <div className={styles.card}>
         <header className={styles.header}>
-          <div className={styles.logo}>PM</div>
+          <img src={logo} alt="PediMaster" className={styles.logo}></img>
           <h1 className={styles.title}>PediMaster</h1>
         </header>
 
