@@ -14,5 +14,7 @@ namespace Application.Interfaces
         Task<UserResponseDto> CreateAsync(CreateUserDto dto);
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> LoginAsync(string email, string password);
+
+        Task<UserResponseDto> GetUserAsync(int Id);
     }
 }

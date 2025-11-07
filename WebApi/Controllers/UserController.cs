@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Infrastructure.Migrations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -19,16 +20,13 @@ namespace WebApi.Controllers
             _repository = repository;
             _logger = logger;
         }
-        [HttpPost]
-        public async Task<ActionResult<UserResponseDto>> CreateUser(CreateUserDto request)
+        [HttpGet("{Id:int}")]
+        public async Task<IActionResult> GetUserAsync([FromRoute] int Id)
         {
-            
-            var command = await _repository.CreateAsync(request);
-            return command;
-
-
+            var user = await _repository.GetUserAsync(Id);
+            if (user == null) return NotFound();
+            _logger.LogInformation("Get user ok");
+            return Ok(user);
         }
-    
-    
     }    
 }

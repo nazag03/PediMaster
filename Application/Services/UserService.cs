@@ -29,14 +29,14 @@ namespace Application.Services
             {
                 Email = dto.Email,
                 Name = dto.UserName,
-                Role = UserRole.SuperAdmin,
+                activo= true,
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new UserResponseDto(user.Name, user.Email, DateTime.UtcNow);
+            return new UserResponseDto(user.Name, user.Email);
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
@@ -54,6 +54,13 @@ namespace Application.Services
             if (result == PasswordVerificationResult.Failed) return null;
 
             return user; 
+        }
+
+        public async Task<UserResponseDto> GetUserAsync(int Id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(c => c.UserId == Id);
+            if (user is null) return null;
+            return new UserResponseDto(user.Name, user.Email);
         }
 
     }

@@ -41,6 +41,7 @@ builder.Services.AddAuthentication();
 // Register dependencies And Use InMemory Database
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 
 

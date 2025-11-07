@@ -14,7 +14,7 @@ namespace Application.DTOs
      [MinLength(2), MaxLength(100), Required] string UserName
     
     );
-    public record UserResponseDto(string UserName, string Email, DateTime CreatedAt);
+    public record UserResponseDto(string UserName, string Email);
 
     public record LoginRequestDto([EmailAddress, Required] string Email, [MinLength(6),MaxLength(50), Required] string Password);
     public record LoginUserResponseDto(string JwtToken, DateTime LoggedAt);
