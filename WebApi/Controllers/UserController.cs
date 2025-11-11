@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Infrastructure.Migrations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace WebApi.Controllers
             _repository = repository;
             _logger = logger;
         }
+        [Authorize(Roles ="SuperAdmin, Admin")]
         [HttpGet("{Id:int}")]
         public async Task<IActionResult> GetUserAsync([FromRoute] int Id)
         {

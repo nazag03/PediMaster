@@ -11,6 +11,6 @@ namespace Application.Interfaces
 {
     public interface IRestaurantService
     {
-        Task<RestaurantResponseDto> CreateAsync(CreateRestaurantDto dto, int UserId);
+        Task<RestaurantResponseDto> CreateAsync(CreateRestaurantRequestDto dto, int UserId);
     }
 }

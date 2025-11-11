@@ -19,7 +19,7 @@ namespace Application.Services
         {
             _context = context;
         }
-        public async Task<RestaurantResponseDto> CreateAsync(CreateRestaurantDto dto, int UserId)
+        public async Task<RestaurantResponseDto> CreateAsync(CreateRestaurantRequestDto dto, int UserId)
         {
             var restaurant = new Restaurant
             {

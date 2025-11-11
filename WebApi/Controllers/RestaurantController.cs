@@ -1,10 +1,10 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Infrastructure.Migrations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
@@ -20,9 +20,9 @@ namespace WebApi.Controllers
             _repository = repository;
             _logger = logger;
         }
-        [Authorize]
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateRestaurant([FromBody]CreateRestaurantDto request) 
+        public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantRequestDto request) 
         {
             var userId = User.FindFirst("userId")?.Value;
             if (userId is null) return Unauthorized();

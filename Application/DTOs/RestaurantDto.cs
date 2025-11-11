@@ -1,26 +1,36 @@
-﻿using Domain.Entities.Availables;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.DTOs
+﻿namespace Application.DTOs
 {
- 
-    
-        public record CreateRestaurantDto(
-            string Name,
-            string Address,
-            string Telephone,
-            string Description,
-            Availability Availability);
+    public record CreateRestaurantRequestDto(
+        string Name,
+        string Address,
+        string Telephone,
+        string Description,
+        AvailabilityRequestDto Availability);
 
-        public record RestaurantResponseDto(string Name,
-            string Address,
-            string Telephone,
-            string Description
-            );
+    public record RestaurantResponseDto(string Name,
+        string Address,
+        string Telephone,
+        string Description
+        );
 
-    
+    public record AvailabilityRequestDto
+    (
+
+        List<DayAvailabilityRequestDto> AvailabilityOnTheDays
+    );
+
+    public record DayAvailabilityRequestDto
+    (
+         DayOfWeek Day,
+         bool Active,
+         bool AllDay,
+         List<HourAvailabilityRequestDto>? AvailabilityHours
+
+    );
+
+    public record HourAvailabilityRequestDto
+    (
+            TimeSpan Init,
+            TimeSpan End
+    );
 }

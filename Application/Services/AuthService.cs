@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services
 {
@@ -32,13 +33,14 @@ namespace Application.Services
             var claims = new[]
             {
                 new Claim("userId", user.UserId.ToString()),
-                new Claim("email", user.Email),
-                new Claim("Role", user.Role.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                
             };
 
             var token = new JwtSecurityToken(
-           issuer: _config["Jwt:Issuer"],
-           audience: _config["Jwt:Audience"],
+           issuer: _config.GetSection("Jwt:Issuer").Value,
+           audience: _config.GetSection("Jwt:Audience").Value,
            claims: claims,
            expires: DateTime.UtcNow.AddMinutes(30),
            signingCredentials: creds
