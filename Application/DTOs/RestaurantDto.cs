@@ -4,6 +4,7 @@
         string Name,
         string Address,
         string Telephone,
+        List<string> ImagesUrl,
         string Description,
         AvailabilityRequestDto Availability);
 

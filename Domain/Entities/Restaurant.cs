@@ -13,6 +13,7 @@ namespace Domain.Entities
         public string Name { get; set; } = null!;
         public string Address { get; set; } = null!;
         public string Telephone { get; set; } = null!;
+        public List <string>? Image { get; set; } 
         public string? Description { get; set; }
         public Availability Availability { get; set; }
 

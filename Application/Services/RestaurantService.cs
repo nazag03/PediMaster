@@ -28,6 +28,7 @@ namespace Application.Services
                 Name = dto.Name,
                 Address = dto.Address,
                 Telephone = dto.Telephone,
+                Image = dto.ImagesUrl,
                 Description = dto.Description,
                 Availability = new Availability(),
             };
