@@ -20,13 +20,14 @@ namespace WebApi.Controllers
             _repository = repository;
             _logger = logger;
         }
-        [Authorize(Roles = "SuperAdmin,Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantRequestDto request) 
         {
             var userId = User.FindFirst("userId")?.Value;
             if (userId is null) return Unauthorized();
             var response = await _repository.CreateAsync(request, int.Parse(userId));
+  
             return Ok(response);
         } 
 
