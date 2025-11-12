@@ -2,7 +2,6 @@
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,22 +14,23 @@ namespace Application.Services
     public class RestaurantService : IRestaurantService
     {
         private readonly ApplicationDbContext _context;
-        
+
         public RestaurantService(ApplicationDbContext context)
         {
             _context = context;
         }
-        public async Task<RestaurantResponseDto> CreateAsync(CreateRestaurantRequestDto dto, int UserId)
+
+        public async Task<RestaurantResponseDto> CreateAsync(CreateRestaurantRequestDto dto, int userId)
         {
             var restaurant = new Restaurant
             {
-                CreatedByUserId = UserId,
+                CreatedByUserId = userId,
                 Name = dto.Name,
                 Address = dto.Address,
                 Telephone = dto.Telephone,
                 Image = dto.ImagesUrl,
                 Description = dto.Description,
-                Availability = new Availability(),
+                Availability = new Availability()
             };
 
             foreach (var dayDto in dto.Availability.AvailabilityOnTheDays)
@@ -57,14 +57,76 @@ namespace Application.Services
 
                 restaurant.Availability.AvailabilityOnTheDays.Add(dayEntity);
             }
+
             _context.Restaurants.Add(restaurant);
             await _context.SaveChangesAsync();
 
-            return new RestaurantResponseDto(restaurant.Name,
+            return new RestaurantResponseDto(restaurant.RestaurantId,
+                restaurant.Name,
                 restaurant.Address,
                 restaurant.Telephone,
-                restaurant.Description);
+                restaurant.Description
+            );
+        }
 
+        public async Task<IEnumerable<RestaurantResponseDto>> GetAllAsync()
+        {
+            return await _context.Restaurants
+                .Select(r => new RestaurantResponseDto(
+                    r.RestaurantId,
+                    r.Name,
+                    r.Address,
+                    r.Telephone,
+                    r.Description
+                ))
+                .ToListAsync();
+        }
+
+        public async Task<RestaurantResponseDto?> GetByIdAsync(int id)
+        {
+            var restaurant = await _context.Restaurants.FindAsync(id);
+            if (restaurant == null) return null;
+
+            return new RestaurantResponseDto(restaurant.RestaurantId,
+                restaurant.Name,
+                restaurant.Address,
+                restaurant.Telephone,
+                restaurant.Description
+            );
+        }
+
+        public async Task<RestaurantResponseDto?> UpdateAsync(int id, CreateRestaurantRequestDto dto)
+        {
+            var restaurant = await _context.Restaurants
+                .Include(r => r.Availability)
+                .FirstOrDefaultAsync(r => r.RestaurantId == id);
+
+            if (restaurant == null) return null;
+
+            restaurant.Name = dto.Name;
+            restaurant.Address = dto.Address;
+            restaurant.Telephone = dto.Telephone;
+            restaurant.Image = dto.ImagesUrl;
+            restaurant.Description = dto.Description;
+
+            await _context.SaveChangesAsync();
+
+            return new RestaurantResponseDto(restaurant.RestaurantId,
+                restaurant.Name,
+                restaurant.Address,
+                restaurant.Telephone,
+                restaurant.Description
+            );
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var restaurant = await _context.Restaurants.FindAsync(id);
+            if (restaurant == null) return false;
+
+            _context.Restaurants.Remove(restaurant);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

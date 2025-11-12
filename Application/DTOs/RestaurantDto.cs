@@ -8,7 +8,8 @@
         string Description,
         AvailabilityRequestDto Availability);
 
-    public record RestaurantResponseDto(string Name,
+    public record RestaurantResponseDto(int RestaurantId,
+        string Name,
         string Address,
         string Telephone,
         string Description
