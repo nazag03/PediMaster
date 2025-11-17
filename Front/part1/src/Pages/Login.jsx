@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import styles from "./Login.module.css";
-import logo from "../assets/PedimasterLogo.png"
+import logo from "../assets/PedimasterLogo.png";
 
 export default function Login() {
-  const { login, register, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const nav = useNavigate();
   const loc = useLocation();
   const redirectTo = loc.state?.from || "/admin/foods";
@@ -26,17 +26,24 @@ export default function Login() {
     e.preventDefault();
     setSub(true);
     setErr("");
-    const fn = mode === "login" ? login : register;
-    const res = await fn(form.user.trim(), form.pass);
+
+    // para el back: "user" = email
+    const res = await login(form.user.trim(), form.pass);
+
     setSub(false);
-    if (res.ok) nav(redirectTo, { replace: true });
-    else setErr(res.error || "Error de autenticación");
+
+    if (res.ok) {
+      nav(redirectTo, { replace: true });
+    } else {
+      setErr(res.error || "Error de autenticación");
+    }
   };
 
   const onGoogle = async () => {
     setSub(true);
     const res = await loginWithGoogle();
     setSub(false);
+
     if (res.ok) nav(redirectTo, { replace: true });
     else setErr(res.error || "No se pudo iniciar con Google");
   };
@@ -45,7 +52,7 @@ export default function Login() {
     <div className={styles.wrap}>
       <div className={styles.card}>
         <header className={styles.header}>
-          <img src={logo} alt="PediMaster" className={styles.logo}></img>
+          <img src={logo} alt="PediMaster" className={styles.logo} />
           <h1 className={styles.title}>PediMaster</h1>
         </header>
 
@@ -53,26 +60,33 @@ export default function Login() {
           {mode === "login" ? "Ingresá a tu panel" : "Creá tu cuenta gratis"}
         </p>
 
+        {/* GOOGLE LOGIN */}
         <button
           type="button"
           className={styles.googleBtn}
           onClick={onGoogle}
           disabled={sub}
         >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" />
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt=""
+          />
           {sub ? "Conectando..." : "Continuar con Google"}
         </button>
 
-        <div className={styles.divider}><span>o con email</span></div>
+        <div className={styles.divider}>
+          <span>o con email</span>
+        </div>
 
         <form onSubmit={onSubmit} className={styles.form}>
           <div className={styles.field}>
-            <label>Usuario</label>
+            <label>Email</label>
             <input
               name="user"
+              type="email"
               value={form.user}
               onChange={onChange}
-              placeholder="Tu usuario"
+              placeholder="tucorreo@ejemplo.com"
               required
             />
           </div>
@@ -101,7 +115,13 @@ export default function Login() {
           {err && <div className={styles.error}>{err}</div>}
 
           <button type="submit" disabled={sub} className={styles.btnPrimary}>
-            {sub ? (mode === "login" ? "Ingresando..." : "Registrando...") : mode === "login" ? "Ingresar" : "Registrarme"}
+            {sub
+              ? mode === "login"
+                ? "Ingresando..."
+                : "Registrando..."
+              : mode === "login"
+              ? "Ingresar"
+              : "Registrarme"}
           </button>
 
           <p className={styles.switch}>
@@ -131,7 +151,7 @@ export default function Login() {
           </p>
 
           <p className={styles.note}>
-            * Demo local: credenciales definidas en <code>.env.local</code>
+            * Ahora el login usa tu API .NET (<code>/api/v1/auth</code>)
           </p>
         </form>
       </div>

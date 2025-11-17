@@ -10,8 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Add services to the container.
 var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value);
@@ -45,6 +47,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:5173") // Para que acepte request del front
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+});
 
 
 var app = builder.Build();
@@ -56,6 +70,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseCors("AllowFrontend"); // Para que use el addpolicy
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

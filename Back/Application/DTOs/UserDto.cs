@@ -15,7 +15,7 @@ namespace Application.DTOs
     
     );
     public record UserResponseDto(string UserName, string Email);
-
+    public record GoogleLoginRequestDto(string IdToken);
     public record LoginRequestDto([EmailAddress, Required] string Email, [MinLength(6),MaxLength(50), Required] string Password);
     public record LoginUserResponseDto(string JwtToken, DateTime LoggedAt);
 }

@@ -3,9 +3,8 @@ import Navbar from "./Components/NavBar";
 import Home from "./Pages/Home";
 import AdminFoods from "./Pages/AdminFoods";
 import FoodForm from "./Pages/FoodForm";
-import Login from "./Pages/login";
+import Login from "./Pages/Login";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import Pruebas from "./Pages/Pruebas"
 import "./App.css";
 import CartPage from "./pages/CartPage";
 import AdminOrders from "./Pages/AdminOrders";
@@ -24,7 +23,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/carrito" element={<CartPage />} />
-        <Route path="/pruebas" element={<Pruebas />} />
+  
 
         {/* Protegido */}
         <Route element={<ProtectedRoute />}>

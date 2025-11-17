@@ -25,11 +25,12 @@ namespace Application.Services
             {
                 throw new InvalidOperationException("Email was registered");
             }
+
             var user = new User
             {
                 Email = dto.Email,
                 Name = dto.UserName,
-                activo= true,
+                activo = true,
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
@@ -42,7 +43,6 @@ namespace Application.Services
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            
         }
 
         public async Task<User?> LoginAsync(string email, string password)
@@ -53,7 +53,7 @@ namespace Application.Services
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
             if (result == PasswordVerificationResult.Failed) return null;
 
-            return user; 
+            return user;
         }
 
         public async Task<UserResponseDto> GetUserAsync(int Id)
@@ -63,5 +63,29 @@ namespace Application.Services
             return new UserResponseDto(user.Name, user.Email);
         }
 
+        // 🔥 AGREGADO: usado por AuthController.Google
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            // Reutilizamos la misma lógica que GetUserByEmailAsync
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        // 🔥 AGREGADO: crear usuario cuando viene por Google
+        public async Task<User> CreateGoogleUserAsync(CreateUserDto dto)
+        {
+            var user = new User
+            {
+                Email = dto.Email,
+                Name = dto.UserName,
+                activo = true,
+                // Usuario creado por Google → no necesita contraseña para login normal
+                PasswordHash = string.Empty
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return user;
+        }
     }
 }
