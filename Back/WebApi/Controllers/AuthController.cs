@@ -46,14 +46,16 @@ namespace WebApi.Controllers
             var jwt = _authService.GenerateJwtToken(user);
             return Ok(new LoginUserResponseDto(jwt, DateTime.UtcNow));
         }
+
         [HttpPost("google")]
         public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleLoginRequestDto request)
         {
-        _logger.LogInformation("📦 Raw request: {@Request}", request);
-        _logger.LogInformation("🟢 Token: {Token}", request.IdToken);
+            _logger.LogInformation("📦 Raw request: {@Request}", request);
+            _logger.LogInformation("🟢 Token: {Token}", request.IdToken);
+
             if (string.IsNullOrWhiteSpace(request.IdToken))
                 return BadRequest("IdToken is required.");
-            Console.WriteLine("Entro aca");
+
             GoogleJsonWebSignature.Payload payload;
             try
             {
@@ -79,18 +81,20 @@ namespace WebApi.Controllers
             // 1) Buscar usuario por email en tu DB
             var user = await _repositroy.GetByEmailAsync(payload.Email);
 
-            // 2) Si no existe, lo creamos
+            // 2) Si no existe, lo creamos como usuario de Google
             if (user is null)
             {
+                var randomPassword = Guid.NewGuid().ToString("N").Substring(0, 12) + "aA1!";
+
                 var createDto = new CreateUserDto(
                     payload.Email,
-                    Guid.NewGuid().ToString("N").Substring(0, 12) + "aA1!", // password random
+                    randomPassword,
                     payload.Name ?? payload.Email
                 );
 
                 user = await _repositroy.CreateGoogleUserAsync(createDto);
             }
-            Console.WriteLine("Entro aca");
+
             // 3) Generar tu JWT como siempre
             var jwt = _authService.GenerateJwtToken(user);
 

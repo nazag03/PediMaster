@@ -49,8 +49,8 @@ namespace Application.Services
                     {
                         dayEntity.AvailabilityHours.Add(new AvailabilityHours
                         {
-                            Init = hourDto.Init,
-                            End = hourDto.End
+                            Init = TimeSpan.TryParse(hourDto.Init, out var init) ? init : throw new Exception("Invalid Init value"),
+                            End = TimeSpan.TryParse(hourDto.End, out var end) ? end : throw new Exception("Invalidad End value")
                         });
                     }
                 }

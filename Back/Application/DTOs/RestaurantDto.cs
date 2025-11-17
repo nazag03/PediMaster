@@ -32,8 +32,8 @@
 
     public record HourAvailabilityRequestDto
     (
-            TimeSpan Init,
-            TimeSpan End
+            string Init,
+            string End
     );
 
 }
