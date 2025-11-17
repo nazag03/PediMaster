@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import styles from "./Login.module.css";
 import logo from "../assets/PedimasterLogo.png";
 
 export default function Login() {
-  const { login, loginWithGoogle } = useAuth();
+  const { login, handleGoogleCredential } = useAuth();
   const nav = useNavigate();
   const loc = useLocation();
   const redirectTo = loc.state?.from || "/admin/foods";
 
-  const [mode, setMode] = useState("login");
+  const [mode, setMode] = useState("login"); // "login" | "register"
   const [form, setForm] = useState({ user: "", pass: "" });
   const [showPass, setShowPass] = useState(false);
   const [err, setErr] = useState("");
@@ -27,9 +27,8 @@ export default function Login() {
     setSub(true);
     setErr("");
 
-    // para el back: "user" = email
+    // por ahora siempre login clásico
     const res = await login(form.user.trim(), form.pass);
-
     setSub(false);
 
     if (res.ok) {
@@ -39,18 +38,44 @@ export default function Login() {
     }
   };
 
-  const onGoogle = async () => {
-    setSub(true);
-    const res = await loginWithGoogle();
-    setSub(false);
+  // Inicializar Google y renderizar el botón una vez que la lib está lista
+  useEffect(() => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    console.log("CLIENT ID FRONT:", clientId);
+    console.log("ORIGIN FRONT:", window.location.origin);
 
-    if (res.ok) nav(redirectTo, { replace: true });
-    else setErr(res.error || "No se pudo iniciar con Google");
-  };
+    if (!window.google || !window.google.accounts || !clientId) {
+      console.log("⚠️ Google no está listo o falta clientId");
+      return;
+    }
+
+    // inicializamos con callback que, cuando termine, redirige
+    window.google.accounts.id.initialize({
+      client_id: clientId,
+      callback: async (cred) => {
+        await handleGoogleCredential(cred);
+        nav(redirectTo, { replace: true });
+      },
+    });
+
+    const wrapper = document.getElementById("googleWrapper");
+    if (wrapper && wrapper.childElementCount === 0) {
+      window.google.accounts.id.renderButton(wrapper, {
+        theme: "outline",
+        size: "large",
+        shape: "pill",
+        text: "continue_with",
+      });
+    }
+  }, [handleGoogleCredential, nav, redirectTo]);
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.card}>
+      <div
+        className={`${styles.card} ${
+          mode === "login" ? styles.cardLogin : styles.cardRegister
+        }`}
+      >
         <header className={styles.header}>
           <img src={logo} alt="PediMaster" className={styles.logo} />
           <h1 className={styles.title}>PediMaster</h1>
@@ -60,19 +85,15 @@ export default function Login() {
           {mode === "login" ? "Ingresá a tu panel" : "Creá tu cuenta gratis"}
         </p>
 
-        {/* GOOGLE LOGIN */}
-        <button
-          type="button"
-          className={styles.googleBtn}
-          onClick={onGoogle}
-          disabled={sub}
-        >
-          <img
-            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-            alt=""
-          />
-          {sub ? "Conectando..." : "Continuar con Google"}
-        </button>
+        {/* BOTÓN GOOGLE */}
+        <div className={styles.googleBtnWrapper}>
+          <div
+            id="googleWrapper"
+            className={`${styles.googleWrapper} ${
+              mode === "login" ? styles.loginMode : styles.registerMode
+            }`}
+          ></div>
+        </div>
 
         <div className={styles.divider}>
           <span>o con email</span>
