@@ -1,5 +1,5 @@
 // src/auth/AuthProvider.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { AuthContext } from "./AuthContext.jsx";
 
 const STORAGE_KEY = "pm_auth_token";
@@ -24,7 +24,7 @@ function parseJwt(token) {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);   // { email, role, userId, token }
+  const [user, setUser] = useState(null); // { email, role, userId, token }
   const [ready, setReady] = useState(false);
 
   // Cargar sesión guardada al montar
@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
     setReady(true);
   }, []);
 
-  // LOGIN → pega a tu API .NET
+  // ---------- LOGIN NORMAL (email + pass) ----------
   const login = async (email, password) => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
@@ -111,103 +111,87 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(STORAGE_KEY);
     setUser(null);
   };
-    // LOGIN CON GOOGLE
-  // LOGIN CON GOOGLE
-const loginWithGoogle = async () => {
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  console.log("CLIENT ID FRONT:", clientId);
-  console.log("ORIGIN FRONT:", window.location.origin);
 
-  if (!window.google || !window.google.accounts || !clientId) {
-    console.log("⚠️ Google no está listo o falta clientId");
-    return { ok: false, error: "Google no está disponible" };
-  }
+  // ---------- CALLBACK QUE USA GOOGLE (credential → back → setUser) ----------
+  const handleGoogleCredential = useCallback(
+    async (response) => {
+      console.log("🟢 CALLBACK DE GOOGLE EJECUTADO:", response);
 
-  return new Promise((resolve) => {
-    console.log("🟡 Inicializando Google Identity...");
-    window.google.accounts.id.initialize({
-      client_id: clientId,
-      callback: async (response) => {
-        console.log("✅ CALLBACK de Google ejecutado. Response:", response);
+      try {
+        const idToken = response?.credential;
+        console.log(
+          "🔑 ID TOKEN (primeros 40 chars):",
+          idToken ? idToken.slice(0, 40) + "..." : "NULL"
+        );
 
-        try {
-          const idToken = response?.credential;
-          console.log(
-            "🔑 ID TOKEN (primeros 40 chars):",
-            idToken ? idToken.slice(0, 40) + "..." : "NULL"
-          );
-
-          if (!idToken) {
-            resolve({ ok: false, error: "Google no devolvió credencial" });
-            return;
-          }
-
-          console.log("📤 Enviando token al back:", `${API_BASE_URL}/api/v1/auth/google`);
-          const res = await fetch(`${API_BASE_URL}/api/v1/auth/google`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ idToken }),
-          });
-
-          console.log("📥 Respuesta del back:", res.status);
-
-          if (!res.ok) {
-            const text = await res.text();
-            console.log("❌ Error desde el back:", text);
-            resolve({
-              ok: false,
-              error: text || "Error iniciando sesión con Google",
-            });
-            return;
-          }
-
-          const data = await res.json();
-          const jwt = data.jwtToken ?? data.JwtToken;
-          console.log("🧾 JWT recibido (primeros 40 chars):", jwt?.slice(0, 40) + "...");
-
-          localStorage.setItem(STORAGE_KEY, jwt);
-
-          const payload = parseJwt(jwt);
-
-          const email =
-            payload[
-              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-            ] ||
-            payload.email ||
-            null;
-
-          const role =
-            payload[
-              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-            ] ||
-            payload.role ||
-            null;
-
-          const userId = payload["userId"] || null;
-
-          setUser({ email, role, userId, token: jwt });
-
-          resolve({ ok: true });
-        } catch (err) {
-          console.error("💥 Error en callback de Google:", err);
-          resolve({ ok: false, error: "No se pudo procesar Google Login" });
+        if (!idToken) {
+          console.log("⚠️ Google no devolvió credential");
+          return;
         }
-      },
-    });
 
-    console.log("🟠 Llamando a google.accounts.id.prompt()...");
-    window.google.accounts.id.prompt();
-  });
-};
+        const url = `${API_BASE_URL}/api/v1/auth/google`;
+        console.log("📤 Enviando token al back:", url);
 
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
 
+        console.log("📥 Respuesta del back (status):", res.status);
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.log("❌ Error desde el back:", text);
+          return;
+        }
+
+        const data = await res.json();
+        const jwt = data.jwtToken ?? data.JwtToken;
+        console.log(
+          "🧾 JWT recibido (primeros 40 chars):",
+          jwt?.slice(0, 40) + "..."
+        );
+
+        localStorage.setItem(STORAGE_KEY, jwt);
+
+        const payload = parseJwt(jwt);
+
+        const email =
+          payload[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+          ] ||
+          payload.email ||
+          null;
+
+        const role =
+          payload[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ] ||
+          payload.role ||
+          null;
+
+        const userId = payload["userId"] || null;
+
+        setUser({ email, role, userId, token: jwt });
+      } catch (err) {
+        console.error("💥 Error en callback de Google:", err);
+      }
+    },
+    [setUser]
+  );
 
   return (
-    <AuthContext.Provider value={{ user, ready, login, loginWithGoogle, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        ready,
+        login,
+        logout,
+        handleGoogleCredential, // 👈 lo usás en Login.jsx para renderButton
+      }}
+    >
       {children}
     </AuthContext.Provider>
-);
-
+  );
 }
-
-
