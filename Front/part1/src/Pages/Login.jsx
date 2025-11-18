@@ -135,7 +135,13 @@ export default function Login() {
 
           {err && <div className={styles.error}>{err}</div>}
 
-          <button type="submit" disabled={sub} className={styles.btnPrimary}>
+          <button
+            type="submit"
+            disabled={sub}
+            className={`${styles.btnPrimary} ${
+              mode === "login" ? styles.btnPrimaryLogin : styles.btnPrimaryRegister
+            }`}
+          >
             {sub
               ? mode === "login"
                 ? "Ingresando..."
@@ -152,28 +158,27 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setMode("register")}
-                  className={styles.link}
+                  className={`${styles.link} ${styles.linkLogin}`}
                 >
                   Registrate
                 </button>
+
               </>
             ) : (
               <>
                 ¿Ya tenés cuenta?{" "}
                 <button
-                  type="button"
-                  onClick={() => setMode("login")}
-                  className={styles.link}
-                >
-                  Iniciá sesión
-                </button>
+                type="button"
+                onClick={() => setMode("login")}
+                className={`${styles.link} ${styles.linkRegister}`}
+              >
+                Iniciá sesión
+              </button>
+
               </>
             )}
           </p>
 
-          <p className={styles.note}>
-            * Ahora el login usa tu API .NET (<code>/api/v1/auth</code>)
-          </p>
         </form>
       </div>
     </div>

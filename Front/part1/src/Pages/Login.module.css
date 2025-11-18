@@ -202,6 +202,25 @@ body {
     box-shadow 0.15s ease;
 }
 
+.btnPrimaryLogin {
+  background: var(--orange);
+}
+
+.btnPrimaryLogin:hover {
+  background: var(--orange-hover);
+  box-shadow: 0 8px 18px rgba(255, 77, 0, 0.25);
+}
+
+.btnPrimaryRegister {
+  background: var(--purple);
+}
+
+.btnPrimaryRegister:hover {
+  background: var(--purple-hover);
+  box-shadow: 0 8px 18px rgba(123, 63, 243, 0.25);
+}
+
+
 .btnPrimary:hover {
   background: var(--orange-hover);
   transform: translateY(-1px);
@@ -235,10 +254,20 @@ body {
 .link {
   background: none;
   border: none;
-  color: var(--orange);
   font-weight: 600;
   cursor: pointer;
 }
+
+/* cuando estás en login y el link dice "Registrate" */
+.linkLogin {
+  color: var(--purple);
+}
+
+/* cuando estás en register y el link dice "Iniciá sesión" */
+.linkRegister {
+  color: var(--orange);
+}
+
 
 .note {
   color: #aaa;
