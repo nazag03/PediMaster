@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import styles from "./Login.module.css";
 import logo from "../assets/PedimasterLogo.png";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const { login, handleGoogleCredential } = useAuth();
@@ -123,13 +124,14 @@ export default function Login() {
                 placeholder="••••••"
                 required
               />
-              <button
+             <button
                 type="button"
                 className={styles.showBtn}
                 onClick={() => setShowPass((v) => !v)}
               >
-                {showPass ? "Ocultar" : "Mostrar"}
+                {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
+
             </div>
           </div>
 
