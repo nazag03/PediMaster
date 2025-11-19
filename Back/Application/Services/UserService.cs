@@ -18,31 +18,80 @@ namespace Application.Services
             _passwordHasher = new PasswordHasher<User>();
         }
 
+        // CREATE
         public async Task<UserResponseDto> CreateAsync(CreateUserDto dto)
         {
             var exists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
-            if (exists)
-            {
-                throw new InvalidOperationException("Email was registered");
-            }
+            if (exists) throw new InvalidOperationException("Email already registered");
+
             var user = new User
             {
                 Email = dto.Email,
                 Name = dto.UserName,
-                activo= true,
+                activo = true,
+                Role = UserRole.Client
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return new UserResponseDto(user.Name, user.Email);
         }
 
+        // READ ALL
+        public async Task<IEnumerable<UserListResponseDto>> GetAllAsync()
+        {
+            return await _context.Users
+                .Select(u => new UserListResponseDto(
+                    u.UserId,
+                    u.Name,
+                    u.Email,
+                    u.Role.ToString(),
+                    u.activo
+                )).ToListAsync();
+        }
+
+        // READ BY ID
+        public async Task<UserResponseDto?> GetUserAsync(int Id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Id);
+            if (user == null) return null;
+
+            return new UserResponseDto(user.Name, user.Email);
+        }
+
+        // UPDATE
+        public async Task<UserResponseDto?> UpdateAsync(int id, UpdateUserDto dto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+            if (user == null) return null;
+
+            if (dto.Name != null) user.Name = dto.Name;
+            if (dto.Email != null) user.Email = dto.Email;
+            if (dto.Activo != null) user.activo = dto.Activo.Value;
+
+            await _context.SaveChangesAsync();
+
+            return new UserResponseDto(user.Name, user.Email);
+        }
+
+        // DELETE
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+            if (user == null) return false;
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        // LOGIN
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            
         }
 
         public async Task<User?> LoginAsync(string email, string password)
@@ -53,24 +102,15 @@ namespace Application.Services
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
             if (result == PasswordVerificationResult.Failed) return null;
 
-            return user; 
+            return user;
         }
 
-        public async Task<UserResponseDto> GetUserAsync(int Id)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(c => c.UserId == Id);
-            if (user is null) return null;
-            return new UserResponseDto(user.Name, user.Email);
-        }
-        
-          // 🔥 AGREGADO: usado por AuthController.Google
+        // GOOGLE AUTH
         public async Task<User?> GetByEmailAsync(string email)
         {
-            // Reutilizamos la misma lógica que GetUserByEmailAsync
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        // 🔥 AGREGADO: crear usuario cuando viene por Google
         public async Task<User> CreateGoogleUserAsync(CreateUserDto dto)
         {
             var user = new User
@@ -78,15 +118,13 @@ namespace Application.Services
                 Email = dto.Email,
                 Name = dto.UserName,
                 activo = true,
-                // Usuario creado por Google → no necesita contraseña para login normal
-                PasswordHash = string.Empty
+                PasswordHash = "",
+                Role=UserRole.Client,
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
             return user;
         }
-
     }
 }
