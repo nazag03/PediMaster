@@ -24,11 +24,13 @@ namespace Application.Services
             var exists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
             if (exists) throw new InvalidOperationException("Email already registered");
 
+            
             var user = new User
             {
                 Email = dto.Email,
                 Name = dto.UserName,
                 activo = true,
+                AuthProvider = "local",
                 Role = UserRole.Client
             };
 
@@ -105,20 +107,16 @@ namespace Application.Services
             return user;
         }
 
-        // GOOGLE AUTH
-        public async Task<User?> GetByEmailAsync(string email)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        public async Task<User> CreateGoogleUserAsync(CreateUserDto dto)
+        public async Task<User> CreateGoogleUserAsync(CreateGoogleUserDto dto)
         {
             var user = new User
             {
                 Email = dto.Email,
-                Name = dto.UserName,
+                Name = dto.Username,
                 activo = true,
-                PasswordHash = "",
+                PasswordHash = null,
+                ProviderId = dto.ProviderId,
+                AuthProvider = "google",
                 Role=UserRole.Client,
             };
 
