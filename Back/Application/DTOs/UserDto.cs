@@ -14,6 +14,8 @@ namespace Application.DTOs
         [MinLength(2), MaxLength(100), Required] string UserName
     );
 
+    public record CreateGoogleUserDto
+        (string Email, string Username, string ProviderId);
     public record UpdateUserDto(
         string? Name,
         string? Email,
