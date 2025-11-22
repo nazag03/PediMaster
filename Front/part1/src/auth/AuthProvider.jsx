@@ -1,9 +1,9 @@
 // src/auth/AuthProvider.jsx
 import { useEffect, useState, useCallback } from "react";
-import { AuthContext } from "./AuthContext.jsx";
+import { AuthContext} from "./AuthContext.jsx";
 
 const STORAGE_KEY = "pm_auth_token";
-const API_BASE_URL =
+const API_BASE_URL = 
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5117";
 
 // helper para leer el JWT

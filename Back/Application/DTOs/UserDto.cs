@@ -9,13 +9,30 @@ using System.Threading.Tasks;
 namespace Application.DTOs
 {
     public record CreateUserDto(
-     [EmailAddress, Required] string Email,
-     [MinLength(6), MaxLength(50), Required] string Password,
-     [MinLength(2), MaxLength(100), Required] string UserName
-    
+        [EmailAddress, Required] string Email,
+        [MinLength(6), MaxLength(50), Required] string Password,
+        [MinLength(2), MaxLength(100), Required] string UserName
     );
+
+    public record UpdateUserDto(
+        string? Name,
+        string? Email,
+        bool? Activo
+    );
+
     public record UserResponseDto(string UserName, string Email);
+
+    public record UserListResponseDto(
+        int UserId,
+        string Name,
+        string Email,
+        string Role,
+        bool Activo
+    );
+
     public record GoogleLoginRequestDto(string IdToken);
-    public record LoginRequestDto([EmailAddress, Required] string Email, [MinLength(6),MaxLength(50), Required] string Password);
+    public record LoginRequestDto([EmailAddress, Required] string Email,
+                                  [MinLength(6), MaxLength(50), Required] string Password);
     public record LoginUserResponseDto(string JwtToken, DateTime LoggedAt);
 }
+

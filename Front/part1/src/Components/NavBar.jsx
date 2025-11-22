@@ -1,3 +1,4 @@
+// src/Components/NavBar.jsx (o como lo tengas)
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
@@ -11,10 +12,22 @@ export default function Navbar() {
   const linkClass = ({ isActive }) =>
     isActive ? `${styles.nav__link} ${styles.nav__linkActive}` : styles.nav__link;
 
+  // 🔥 Función helper para ver si es SuperAdmin,
+  // soporta user.role = "SuperAdmin" o user.roles = ["SuperAdmin", ...]
+  const isSuperAdmin = (() => {
+    if (!user) return false;
+    const roles = user.roles ?? (user.role ? [user.role] : []);
+    return roles.includes("SuperAdmin");
+  })();
+
   return (
     <header className={styles.nav}>
       <div className={styles.nav__inner}>
-        <NavLink to="/" className={styles.nav__brand} onClick={() => setOpen(false)}>
+        <NavLink
+          to="/"
+          className={styles.nav__brand}
+          onClick={() => setOpen(false)}
+        >
           <img src={logo} alt="PediMaster" className={styles.nav__logo} />
           <span>PediMaster</span>
         </NavLink>
@@ -36,6 +49,17 @@ export default function Navbar() {
           <NavLink to="/" className={linkClass} onClick={() => setOpen(false)}>
             Inicio
           </NavLink>
+
+          {/* 👑 Solo SuperAdmin ve este link */}
+          {isSuperAdmin && (
+            <NavLink
+              to="/superadmin/rotiserias/new"
+              className={linkClass}
+              onClick={() => setOpen(false)}
+            >
+              Nueva rotisería
+            </NavLink>
+          )}
 
           {user ? (
             <>
@@ -63,7 +87,7 @@ export default function Navbar() {
               </NavLink>
 
               <span className={styles.nav__hello}>
-                Hola, {user.username}
+                Hola, {user.email}
               </span>
 
               <button

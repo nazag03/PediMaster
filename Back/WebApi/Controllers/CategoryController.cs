@@ -6,50 +6,48 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApi.Controllers
 {
     [ApiController]
-    [Route("/api/v1/users")]
-    public class UserController : ControllerBase
+    [Route("api/v1/categories")]
+    public class CategoryController : ControllerBase
     {
-        private readonly IUserService _service;
-        private readonly ILogger<UserController> _logger;
+        private readonly ICategoryService _service;
+        private readonly ILogger<CategoryController> _logger;
 
-        public UserController(IUserService service, ILogger<UserController> logger)
+        public CategoryController(ICategoryService service, ILogger<CategoryController> logger)
         {
             _service = service;
             _logger = logger;
         }
 
         // CREATE
-        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserDto dto)
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto)
         {
             var response = await _service.CreateAsync(dto);
             return Ok(response);
         }
 
         // GET ALL
-        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var users = await _service.GetAllAsync();
-            return Ok(users);
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
         // GET BY ID
-        [Authorize(Roles = "SuperAdmin")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var user = await _service.GetUserAsync(id);
-            if (user == null) return NotFound();
-            return Ok(user);
+            var category = await _service.GetByIdAsync(id);
+            if (category == null) return NotFound();
+            return Ok(category);
         }
 
         // UPDATE
-        [Authorize(Roles = "SuperAdmin")]
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserDto dto)
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryDto dto)
         {
             var response = await _service.UpdateAsync(id, dto);
             if (response == null) return NotFound();
@@ -57,12 +55,12 @@ namespace WebApi.Controllers
         }
 
         // DELETE
-        [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "SuperAdmin, Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var success = await _service.DeleteAsync(id);
-            if (!success) return NotFound();
+            var result = await _service.DeleteAsync(id);
+            if (!result) return NotFound();
             return NoContent();
         }
     }
