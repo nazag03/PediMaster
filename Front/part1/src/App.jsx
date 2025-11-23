@@ -11,6 +11,7 @@ import AdminOrders from "./Pages/AdminOrders";
 import AdminCreateRestaurants from "./Pages/AdminCreateRestaurants";
 import AdminRestaurants from "./Pages/AdminRestaurants";
 import RotiAdd from "./Pages/RotiAdd";
+import HomePage from "./Pages/HomePage"
 
 
 export default function App() {
@@ -20,7 +21,8 @@ export default function App() {
 
       <Routes>
         {/* Público */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/Home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/carrito" element={<CartPage />} />
 
