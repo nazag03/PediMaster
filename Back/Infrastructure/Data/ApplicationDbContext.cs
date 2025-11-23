@@ -19,5 +19,19 @@ namespace Infrastructure.Data
         public DbSet<User> Users { get; set; }
         public DbSet<DetailOrder> DetailOrders { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(u => u.Email).IsUnique();
+                entity.Property(u => u.PasswordHash).IsRequired(false);
+                entity.Property(u => u.AuthProvider).HasMaxLength(10).IsRequired(true);
+                entity.Property(u => u.ProviderId).IsRequired(false);
+            }
+            );
+
+        }
     }
+
 }

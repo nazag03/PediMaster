@@ -42,6 +42,7 @@ namespace WebApi.Controllers
 
             var user = await _repositroy.LoginAsync(request.Email, request.Password);
             if (user is null) return Unauthorized("Login failed");
+            if (user.AuthProvider != "local") throw new InvalidOperationException("User must log in with Google");
 
             var jwt = _authService.GenerateJwtToken(user);
             return Ok(new LoginUserResponseDto(jwt, DateTime.UtcNow));
@@ -78,24 +79,19 @@ namespace WebApi.Controllers
             if (payload.EmailVerified != true)
                 return Unauthorized("Google email is not verified");
 
-            // 1) Buscar usuario por email en tu DB
-            var user = await _repositroy.GetByEmailAsync(payload.Email);
+            var user = await _repositroy.GetUserByEmailAsync(payload.Email);
 
-            // 2) Si no existe, lo creamos como usuario de Google
             if (user is null)
             {
-                var randomPassword = Guid.NewGuid().ToString("N").Substring(0, 12) + "aA1!";
-
-                var createDto = new CreateUserDto(
+                var createDto = new CreateGoogleUserDto(
                     payload.Email,
-                    randomPassword,
+                    payload.Subject,
                     payload.Name ?? payload.Email
                 );
 
                 user = await _repositroy.CreateGoogleUserAsync(createDto);
             }
 
-            // 3) Generar tu JWT como siempre
             var jwt = _authService.GenerateJwtToken(user);
 
             return Ok(new LoginUserResponseDto(jwt, DateTime.UtcNow));

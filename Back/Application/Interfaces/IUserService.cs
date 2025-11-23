@@ -13,7 +13,6 @@ namespace Application.Interfaces
 
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> LoginAsync(string email, string password);
-        Task<User?> GetByEmailAsync(string email);
-        Task<User> CreateGoogleUserAsync(CreateUserDto request);
+        Task<User> CreateGoogleUserAsync(CreateGoogleUserDto request);
     }
 }
