@@ -36,7 +36,7 @@ function App() {
               path="/restaurants/:id"
               element={
                 <ClientLayout>
-                  <RestaurantDetail />
+            
                 </ClientLayout>
               }
             />
@@ -48,7 +48,7 @@ function App() {
               path="/admin/foods"
               element={
                 <AdminLayout>
-                  <AdminFoods />
+             
                 </AdminLayout>
               }
             />
@@ -60,7 +60,7 @@ function App() {
               path="/superadmin/restaurants/new"
               element={
                 <SuperAdminLayout>
-                  <RotiAdd />
+               
                 </SuperAdminLayout>
               }
             />

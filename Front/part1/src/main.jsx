@@ -8,7 +8,7 @@ import { OrdersProvider } from "./context/OrderContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
+
     <OrdersProvider>
       <CartProvider>
       <AuthProvider>
@@ -16,6 +16,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       </AuthProvider>
       </CartProvider>
     </OrdersProvider>
-    </BrowserRouter>
+
   </React.StrictMode>
 );
