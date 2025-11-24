@@ -15,11 +15,10 @@ namespace Application.DTOs
     );
 
     public record CreateGoogleUserDto
-        (string Email, string ProviderId, string Username);
-
+        (string Email, string Username, string ProviderId);
     public record UpdateUserDto(
-        string? Email,
         string? Name,
+        string? Email,
         bool? Activo
     );
 
