@@ -1,11 +1,12 @@
 // src/auth/AuthProvider.jsx
 import { useEffect, useState, useCallback } from "react";
 import { AuthContext } from "./AuthContext.jsx";
-import { API_BASE_URL, AUTH_STORAGE_KEY } from "../config/apiConfig";
 
-/**
- * Decodifica el payload de un JWT (sin validar firma, solo lectura)
- */
+const STORAGE_KEY = "pm_auth_token";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5117";
+
+// helper para leer el JWT
 function parseJwt(token) {
   try {
     const base64Url = token.split(".")[1];
@@ -22,75 +23,45 @@ function parseJwt(token) {
   }
 }
 
-function getStoredToken() {
-  try {
-    return localStorage.getItem(AUTH_STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function storeToken(token) {
-  try {
-    localStorage.setItem(AUTH_STORAGE_KEY, token);
-  } catch {
-    // ignore
-  }
-}
-
-function clearToken() {
-  try {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-  } catch {
-    // ignore
-  }
-}
-
-/**
- * Convierte el JWT en un objeto user usable en el front
- * asumiendo que el backend mete roles y demás en claims
- */
-function userFromToken(token) {
-  const payload = parseJwt(token);
-  if (!payload) return null;
-
-  // Ajustá estos nombres según los claims de tu JWT
-  const rolesClaim = payload.roles || payload.role || payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
-  const roles = Array.isArray(rolesClaim)
-    ? rolesClaim
-    : rolesClaim
-    ? [rolesClaim]
-    : [];
-
-  return {
-    id: payload.sub,
-    email: payload.email,
-    name: payload.name,
-    roles,
-    raw: payload,
-  };
-}
-
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // { email, role, userId, token }
   const [ready, setReady] = useState(false);
 
-  // Cargar sesión al iniciar
+  // Cargar sesión guardada al montar
   useEffect(() => {
-    const token = getStoredToken();
-    if (token) {
-      const u = userFromToken(token);
-      if (u) {
-        setUser(u);
-      } else {
-        clearToken();
-      }
+    const token = localStorage.getItem(STORAGE_KEY);
+    if (!token) {
+      setReady(true);
+      return;
     }
+
+    const payload = parseJwt(token);
+    if (!payload) {
+      localStorage.removeItem(STORAGE_KEY);
+      setReady(true);
+      return;
+    }
+
+    const email =
+      payload[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+      ] ||
+      payload.email ||
+      null;
+
+    const role =
+      payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+      payload.role ||
+      null;
+
+    const userId = payload["userId"] || null;
+
+    setUser({ email, role, userId, token });
     setReady(true);
   }, []);
 
-  const login = useCallback(async (email, password) => {
+  // ---------- LOGIN NORMAL (email + pass) ----------
+  const login = async (email, password) => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
         method: "POST",
@@ -98,62 +69,117 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
       if (!res.ok) {
-        const msg = data?.message || "Error al iniciar sesión";
-        return { ok: false, message: msg };
+        const text = await res.text();
+        return { ok: false, error: text || "Credenciales inválidas" };
       }
-
-      const token = data.jwtToken || data.token || data.accessToken;
-      if (!token) {
-        return { ok: false, message: "El backend no devolvió un token" };
-      }
-
-      storeToken(token);
-      const u = userFromToken(token);
-      setUser(u);
-
-      return { ok: true, user: u };
-    } catch (err) {
-      return { ok: false, message: err.message || "Error de red" };
-    }
-  }, []);
-
-  const handleGoogleCredential = useCallback(async (response) => {
-    try {
-      const idToken = response?.credential;
-
-      const res = await fetch(`${API_BASE_URL}/api/v1/auth/google`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken }),
-      });
 
       const data = await res.json();
-      if (!res.ok) {
-        const msg = data?.message || "Error en login con Google";
-        return { ok: false, message: msg };
+      const jwt = data.jwtToken ?? data.JwtToken;
+      if (!jwt) {
+        return { ok: false, error: "El servidor no devolvió un token" };
       }
 
-      const token = data.jwtToken || data.token || data.accessToken;
-      if (!token) {
-        return { ok: false, message: "El backend no devolvió un token" };
-      }
+      localStorage.setItem(STORAGE_KEY, jwt);
 
-      storeToken(token);
-      const u = userFromToken(token);
-      setUser(u);
+      const payload = parseJwt(jwt);
+      const emailClaim =
+        payload[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+        ] ||
+        payload.email ||
+        null;
 
-      return { ok: true, user: u };
+      const role =
+        payload[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ] ||
+        payload.role ||
+        null;
+
+      const userId = payload["userId"] || null;
+
+      setUser({ email: emailClaim, role, userId, token: jwt });
+      return { ok: true };
     } catch (err) {
-      return { ok: false, message: err.message || "Error de red" };
+      console.error(err);
+      return { ok: false, error: "No se pudo conectar al servidor" };
     }
-  }, []);
+  };
 
-  const logout = useCallback(() => {
-    clearToken();
+  const logout = () => {
+    localStorage.removeItem(STORAGE_KEY);
     setUser(null);
-  }, []);
+  };
+
+  // ---------- CALLBACK QUE USA GOOGLE (credential → back → setUser) ----------
+  const handleGoogleCredential = useCallback(
+    async (response) => {
+      console.log("🟢 CALLBACK DE GOOGLE EJECUTADO:", response);
+
+      try {
+        const idToken = response?.credential;
+        console.log(
+          "🔑 ID TOKEN (primeros 40 chars):",
+          idToken ? idToken.slice(0, 40) + "..." : "NULL"
+        );
+
+        if (!idToken) {
+          console.log("⚠️ Google no devolvió credential");
+          return;
+        }
+
+        const url = `${API_BASE_URL}/api/v1/auth/google`;
+        console.log("📤 Enviando token al back:", url);
+
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
+
+        console.log("📥 Respuesta del back (status):", res.status);
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.log("❌ Error desde el back:", text);
+          return;
+        }
+
+        const data = await res.json();
+        const jwt = data.jwtToken ?? data.JwtToken;
+        console.log(
+          "🧾 JWT recibido (primeros 40 chars):",
+          jwt?.slice(0, 40) + "..."
+        );
+
+        localStorage.setItem(STORAGE_KEY, jwt);
+
+        const payload = parseJwt(jwt);
+
+        const email =
+          payload[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+          ] ||
+          payload.email ||
+          null;
+
+        const role =
+          payload[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ] ||
+          payload.role ||
+          null;
+
+        const userId = payload["userId"] || null;
+
+        setUser({ email, role, userId, token: jwt });
+      } catch (err) {
+        console.error("💥 Error en callback de Google:", err);
+      }
+    },
+    [setUser]
+  );
 
   return (
     <AuthContext.Provider
@@ -162,7 +188,7 @@ export function AuthProvider({ children }) {
         ready,
         login,
         logout,
-        handleGoogleCredential,
+        handleGoogleCredential, // 👈 lo usás en Login.jsx
       }}
     >
       {children}
@@ -170,4 +196,5 @@ export function AuthProvider({ children }) {
   );
 }
 
+// para que el import default de main.jsx funcione:
 export default AuthProvider;

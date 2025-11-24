@@ -35,7 +35,7 @@ export default function Login() {
     if (res.ok) {
       nav(redirectTo, { replace: true });
     } else {
-      setErr(res.error || "Error de autenticación");
+      setErr(res.message || "Error de autenticación");
     }
   };
 
@@ -52,12 +52,18 @@ export default function Login() {
 
     // inicializamos con callback que, cuando termine, redirige
     window.google.accounts.id.initialize({
-      client_id: clientId,
-      callback: async (cred) => {
-        await handleGoogleCredential(cred);
+    client_id: clientId,
+    callback: async (cred) => {
+      const res = await handleGoogleCredential(cred);
+      if (res?.ok) {
         nav(redirectTo, { replace: true });
-      },
-    });
+      } else {
+        console.error("Google login error:", res);
+        // si querés:
+        setErr(res?.error || "Error en login con Google");
+      }
+    },
+   });
 
     const wrapper = document.getElementById("googleWrapper");
     if (wrapper && wrapper.childElementCount === 0) {
