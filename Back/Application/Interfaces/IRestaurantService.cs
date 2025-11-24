@@ -11,10 +11,10 @@ namespace Application.Interfaces
 {
     public interface IRestaurantService
     {
-        Task<RestaurantResponseDto> CreateAsync(CreateRestaurantRequestDto dto, int UserId);
+        Task<RestaurantResponseDto> CreateAsync(CreateRestaurantRequestDto dto);
         Task<IEnumerable<RestaurantResponseDto>> GetAllAsync();
         Task<RestaurantResponseDto?> GetByIdAsync(int id);
-        Task<RestaurantResponseDto?> UpdateAsync(int id, CreateRestaurantRequestDto dto);
+        Task<RestaurantResponseDto?> UpdateAsync(int id, UpdateRestaurantRequestDto dto);
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -31,7 +31,7 @@ namespace Application.Services
                 Name = dto.UserName,
                 activo = true,
                 AuthProvider = "local",
-                Role = UserRole.Client
+                Role = UserRole.Client.ToString()
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
@@ -117,7 +117,7 @@ namespace Application.Services
                 PasswordHash = null,
                 ProviderId = dto.ProviderId,
                 AuthProvider = "google",
-                Role=UserRole.Client,
+                Role=UserRole.Client.ToString(),
             };
 
             _context.Users.Add(user);

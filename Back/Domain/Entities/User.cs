@@ -15,7 +15,7 @@ namespace Domain.Entities
         public string? PasswordHash { get; set; }
         public string AuthProvider { get; set; }
         public string? ProviderId { get; set; }
-        public UserRole Role { get; set; }
+        public string Role { get; set; }
         public bool activo { get; set; } = true;
 
         public ICollection<AdminRestaurant>? AdminRestaurants { get; set; }

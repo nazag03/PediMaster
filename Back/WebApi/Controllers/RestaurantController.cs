@@ -12,29 +12,31 @@ namespace WebApi.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _repository;
+        private readonly IUserService _userRepository;
         private readonly ILogger<RestaurantController> _logger;
 
-        public RestaurantController(IRestaurantService repository, ILogger<RestaurantController> logger)
+        public RestaurantController(IRestaurantService repository, ILogger<RestaurantController> logger
+            , IUserService userService)
         {
             _repository = repository;
             _logger = logger;
+            _userRepository = userService;
         }
 
         [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantRequestDto request)
         {
-            var userId = User.FindFirst("userId")?.Value;
-            if (userId is null)
-                return Unauthorized();
-
-            var response = await _repository.CreateAsync(request, int.Parse(userId));
-            _logger.LogInformation("Restaurant '{Name}' created by user {UserId}", request.Name, userId);
+         
+            var userId = await _userRepository.GetUserAsync(request.UserId);
+            if (userId is null) return NotFound("User not found");
+            var response = await _repository.CreateAsync(request);
+            _logger.LogInformation("Restaurant '{Name}' created for user {UserId}", request.Name, userId.UserName);
 
             return Ok(response);
         }
 
-        [Authorize(Roles = "SuperAdmin,Admin,Client")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> GetAllRestaurants()
         {
@@ -45,7 +47,7 @@ namespace WebApi.Controllers
             return Ok(restaurants);
         }
 
-        [Authorize(Roles = "SuperAdmin,Admin,Client")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetRestaurantById(int id)
         {
@@ -56,13 +58,17 @@ namespace WebApi.Controllers
             return Ok(restaurant);
         }
 
-        [Authorize(Roles = "SuperAdmin,Admin")]
+        [Authorize(Roles = "SuperAdmin, Admin")]
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateRestaurant(int id, [FromBody] CreateRestaurantRequestDto request)
+        public async Task<IActionResult> UpdateRestaurant(int id, [FromBody] UpdateRestaurantRequestDto request)
         {
+
+            var user = await _userRepository.GetUserAsync(request.UserId);
+            if (user is null) return NotFound("User not found");
+
             var updatedRestaurant = await _repository.UpdateAsync(id, request);
             if (updatedRestaurant == null)
-                return NotFound($"Restaurant with ID {id} not found");
+            return NotFound($"Restaurant with ID {id} not found");
 
             _logger.LogInformation("Restaurant {Id} updated", id);
             return Ok(updatedRestaurant);
