@@ -1,5 +1,5 @@
 // src/layouts/AdminLayout.jsx
-import Navbar from "../components/Navbar"; // podés hacer una nav distinta si querés
+import Navbar from "../Components/Navbar"; // podés hacer una nav distinta si querés
 
 export default function AdminLayout({ children }) {
   return (

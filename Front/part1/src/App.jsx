@@ -1,4 +1,5 @@
-import {Routes, Route } from "react-router-dom";
+// src/App.jsx
+import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./router/ProtectedRoute";
 import ClientLayout from "./layouts/ClientLayout";
 import AdminLayout from "./layouts/AdminLayout";
@@ -7,62 +8,80 @@ import SuperAdminLayout from "./layouts/SuperAdminLayout";
 // Páginas
 import Login from "./Pages/Login";
 import HomeClient from "./Pages/client/HomeClient";
-//import RestaurantDetail from "./pages/client/RestaurantDetail";
-//import AdminFoods from "./pages/admin/AdminFoods";
-//import RotiAdd from "./superadmin/RotiAdd";
+import CartPage from "./Pages/CartPage";
+import AdminFoods from "./Pages/AdminFoods";
+import AdminOrders from "./Pages/AdminOrders";
+import AdminRestaurants from "./Pages/AdminRestaurants";
+import AdminCreateRestaurants from "./Pages/AdminCreateRestaurants";
 import Unauthorized from "./Pages/Unauthorized";
 
 function App() {
   return (
-        <Routes>
-          {/* Público */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
+    <Routes>
+      {/* Público */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Cliente: solo requiere estar logueado (cualquier rol o directamente solo Client) */}
-          <Route element={<ProtectedRoute allowedRoles={["Client", "Admin", "SuperAdmin"]} />}>
-            <Route
-              path="/"
-              element={
-                <ClientLayout>
-                  <HomeClient />
-                </ClientLayout>
-              }
-            />
-            <Route
-              path="/restaurants/:id"
-              element={
-                <ClientLayout>
-            
-                </ClientLayout>
-              }
-            />
-          </Route>
+      {/* Cliente logueado (cualquier rol válido) */}
+      <Route element={<ProtectedRoute allowedRoles={[]} />}>
+        <Route
+          path="/"
+          element={
+            <ClientLayout>
+              <HomeClient />
+            </ClientLayout>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ClientLayout>
+              <CartPage />
+            </ClientLayout>
+          }
+        />
+      </Route>
 
-          {/* Admin */}
-          <Route element={<ProtectedRoute allowedRoles={["Admin", "SuperAdmin"]} />}>
-            <Route
-              path="/admin/foods"
-              element={
-                <AdminLayout>
-             
-                </AdminLayout>
-              }
-            />
-          </Route>
+      {/* Admin + SuperAdmin */}
+      <Route element={<ProtectedRoute allowedRoles={["Admin", "SuperAdmin"]} />}>
+        <Route
+          path="/admin/foods"
+          element={
+            <AdminLayout>
+              <AdminFoods />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminLayout>
+              <AdminOrders />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/restaurants"
+          element={
+            <AdminLayout>
+              <AdminRestaurants />
+            </AdminLayout>
+          }
+        />
+      </Route>
 
-          {/* SuperAdmin */}
-          <Route element={<ProtectedRoute allowedRoles={["SuperAdmin"]} />}>
-            <Route
-              path="/superadmin/restaurants/new"
-              element={
-                <SuperAdminLayout>
-               
-                </SuperAdminLayout>
-              }
-            />
-          </Route>
-        </Routes>
+      {/* Solo SuperAdmin */}
+      <Route element={<ProtectedRoute allowedRoles={["SuperAdmin"]} />}>
+        <Route
+          path="/superadmin/restaurants/new"
+          element={
+            <SuperAdminLayout>
+              <AdminCreateRestaurants />
+            </SuperAdminLayout>
+          }
+        />
+      </Route>
+    </Routes>
   );
 }
 

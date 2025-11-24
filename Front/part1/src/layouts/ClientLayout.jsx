@@ -1,5 +1,5 @@
 // src/layouts/ClientLayout.jsx
-import Navbar from "../components/Navbar"; // ajustá la ruta según tu proyecto
+import Navbar from "../Components/Navbar"; // ajustá la ruta según tu proyecto
 
 export default function ClientLayout({ children }) {
   return (

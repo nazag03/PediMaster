@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj": {}
+    "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj": {
+    "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\jerem\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jerem\\AppData\\Roaming\\NuGet\\NuGet.Config"
