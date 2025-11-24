@@ -1,22 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./auth/AuthProvider";
+import {Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./router/ProtectedRoute";
 import ClientLayout from "./layouts/ClientLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import SuperAdminLayout from "./layouts/SuperAdminLayout";
 
 // Páginas
-import Login from "./pages/Login";
-import HomeClient from "./pages/client/HomeClient";
+import Login from "./Pages/Login";
+import HomeClient from "./Pages/client/HomeClient";
 //import RestaurantDetail from "./pages/client/RestaurantDetail";
 //import AdminFoods from "./pages/admin/AdminFoods";
 //import RotiAdd from "./superadmin/RotiAdd";
-import Unauthorized from "./pages/Unauthorized";
+import Unauthorized from "./Pages/Unauthorized";
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
         <Routes>
           {/* Público */}
           <Route path="/login" element={<Login />} />
@@ -66,8 +63,6 @@ function App() {
             />
           </Route>
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
   );
 }
 

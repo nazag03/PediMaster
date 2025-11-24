@@ -1,10 +1,5 @@
-// src/api/apiClient.js
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5117";
-
-// 👇 Usar la misma key que en AuthProvider
-const STORAGE_KEY = "pm_auth_token";
+// apiClient.js
+import { API_BASE_URL, AUTH_STORAGE_KEY as STORAGE_KEY } from "../config/apiConfig";
 
 /**
  * Devuelve el token guardado en localStorage (si existe)
