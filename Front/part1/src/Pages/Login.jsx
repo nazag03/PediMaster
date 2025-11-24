@@ -28,14 +28,20 @@ export default function Login() {
     setSub(true);
     setErr("");
 
-    // por ahora siempre login clásico
-    const res = await login(form.user.trim(), form.pass);
-    setSub(false);
+    try {
+      const res = await login(form.user.trim(), form.pass);
+      setSub(false);
 
-    if (res.ok) {
-      nav(redirectTo, { replace: true });
-    } else {
-      setErr(res.message || "Error de autenticación");
+      // si tu login() devuelve { ok, message }
+      if (res?.ok) {
+        nav(redirectTo, { replace: true }); // 👉 redirige al panel
+      } else {
+        setErr(res?.message || "Error de autenticación");
+      }
+    } catch (error) {
+      setSub(false);
+      console.error("Error en login clásico:", error);
+      setErr("Error en login, intentá de nuevo");
     }
   };
 
@@ -50,20 +56,23 @@ export default function Login() {
       return;
     }
 
-    // inicializamos con callback que, cuando termine, redirige
     window.google.accounts.id.initialize({
-    client_id: clientId,
-    callback: async (cred) => {
-      const res = await handleGoogleCredential(cred);
-      if (res?.ok) {
-        nav(redirectTo, { replace: true });
-      } else {
-        console.error("Google login error:", res);
-        // si querés:
-        setErr(res?.error || "Error en login con Google");
-      }
-    },
-   });
+      client_id: clientId,
+      callback: async (cred) => {
+        try {
+          // handleGoogleCredential se encarga de llamar al back y guardar el JWT
+          await handleGoogleCredential(cred);
+
+          // 👉 si no tiró error, redirigimos
+          nav(redirectTo, { replace: true });
+        } catch (error) {
+          console.error("Google login error:", error);
+          setErr(
+            error?.message || "Error en login con Google, intentá de nuevo"
+          );
+        }
+      },
+    });
 
     const wrapper = document.getElementById("googleWrapper");
     if (wrapper && wrapper.childElementCount === 0) {
@@ -130,14 +139,13 @@ export default function Login() {
                 placeholder="••••••"
                 required
               />
-             <button
+              <button
                 type="button"
                 className={styles.showBtn}
                 onClick={() => setShowPass((v) => !v)}
               >
                 {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
-
             </div>
           </div>
 
@@ -147,7 +155,9 @@ export default function Login() {
             type="submit"
             disabled={sub}
             className={`${styles.btnPrimary} ${
-              mode === "login" ? styles.btnPrimaryLogin : styles.btnPrimaryRegister
+              mode === "login"
+                ? styles.btnPrimaryLogin
+                : styles.btnPrimaryRegister
             }`}
           >
             {sub
@@ -170,23 +180,20 @@ export default function Login() {
                 >
                   Registrate
                 </button>
-
               </>
             ) : (
               <>
                 ¿Ya tenés cuenta?{" "}
                 <button
-                type="button"
-                onClick={() => setMode("login")}
-                className={`${styles.link} ${styles.linkRegister}`}
-              >
-                Iniciá sesión
-              </button>
-
+                  type="button"
+                  onClick={() => setMode("login")}
+                  className={`${styles.link} ${styles.linkRegister}`}
+                >
+                  Iniciá sesión
+                </button>
               </>
             )}
           </p>
-
         </form>
       </div>
     </div>
