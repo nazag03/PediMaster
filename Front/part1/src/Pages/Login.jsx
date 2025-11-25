@@ -7,16 +7,21 @@ import { Eye, EyeOff } from "lucide-react";
 import { NETWORK_ERROR_MESSAGE } from "../config/messages";
 
 export default function Login() {
-  const { login, handleGoogleCredential } = useAuth();
+  const { login, register, handleGoogleCredential } = useAuth();
   const nav = useNavigate();
   const loc = useLocation();
   const redirectTo = loc.state?.from || "/admin/foods";
 
   const [mode, setMode] = useState("login"); // "login" | "register"
-  const [form, setForm] = useState({ user: "", pass: "" });
+  const [form, setForm] = useState({ user: "", pass: "", name: "" });
   const [showPass, setShowPass] = useState(false);
   const [err, setErr] = useState("");
   const [sub, setSub] = useState(false);
+
+  useEffect(() => {
+    setErr("");
+    setSub(false);
+  }, [mode]);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -30,19 +35,35 @@ export default function Login() {
     setErr("");
 
     try {
-      const res = await login(form.user.trim(), form.pass);
+      const email = form.user.trim();
+      const password = form.pass;
+      const username = form.name.trim();
+
+      const res =
+        mode === "login"
+          ? await login(email, password)
+          : await register(email, password, username);
+
       setSub(false);
 
       if (res?.ok) {
-        const target =
-          redirectTo ||
-          (res.user?.role === "Admin" || res.user?.role === "SuperAdmin"
-            ? "/admin/foods"
-            : "/app");
+        const roles = res.user?.roles ?? (res.user?.role ? [res.user.role] : []);
+        const isAdmin = roles.includes("Admin") || roles.includes("SuperAdmin");
+        const target = redirectTo || (isAdmin ? "/admin/foods" : "/app");
 
-        nav(target, { replace: true });
+        if (res.user) {
+          nav(target, { replace: true });
+        } else {
+          setMode("login");
+          setErr(res?.message || "Cuenta creada. Iniciá sesión");
+        }
       } else {
-        setErr(res?.message || "Error de autenticación");
+        setErr(
+          res?.message ||
+            (mode === "login"
+              ? "Error de autenticación"
+              : "No se pudo completar el registro")
+        );
       }
     } catch (error) {
       setSub(false);
@@ -131,6 +152,20 @@ export default function Login() {
         </div>
 
         <form onSubmit={onSubmit} className={styles.form}>
+          {mode === "register" && (
+            <div className={styles.field}>
+              <label>Nombre</label>
+              <input
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={onChange}
+                placeholder="Tu nombre"
+                required
+              />
+            </div>
+          )}
+
           <div className={styles.field}>
             <label>Email</label>
             <input

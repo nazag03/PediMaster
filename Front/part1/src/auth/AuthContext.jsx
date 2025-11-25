@@ -5,5 +5,6 @@ export const AuthContext = createContext({
   user: null,
   ready: false,
   login: async () => ({ ok: false }),
+  register: async () => ({ ok: false }),
   logout: () => {},
 });
