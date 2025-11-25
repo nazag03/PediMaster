@@ -33,15 +33,36 @@ export function decodeClaims(token) {
   }
 }
 
+function normalizeRoles(rawRole) {
+  if (!rawRole) return [];
+
+  if (Array.isArray(rawRole)) {
+    return rawRole
+      .map((r) => String(r).trim())
+      .filter((r) => r.length > 0);
+  }
+
+  if (typeof rawRole === "string") {
+    return rawRole
+      .split(",")
+      .map((r) => r.trim())
+      .filter((r) => r.length > 0);
+  }
+
+  return [String(rawRole).trim()].filter((r) => r.length > 0);
+}
+
 export function extractUserFromClaims(claims, token) {
   if (!claims) return null;
 
   const email = EMAIL_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
-  const role = ROLE_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
+  const rawRole = ROLE_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
+  const roles = normalizeRoles(rawRole);
+  const primaryRole = roles[0] ?? null;
   const userId = USER_ID_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
   const expMs = claims.exp ? claims.exp * 1000 : null;
 
-  return { email, role, userId, token, exp: expMs };
+  return { email, role: primaryRole, roles, userId, token, exp: expMs };
 }
 
 export function isExpired(expMs) {

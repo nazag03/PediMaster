@@ -16,7 +16,7 @@ export default function Navbar() {
   // soporta user.role = "SuperAdmin" o user.roles = ["SuperAdmin", ...]
   const isSuperAdmin = (() => {
     if (!user) return false;
-    const roles = user.roles ?? (user.role ? [user.role] : []);
+    const roles = user.roles ?? [];
     return roles.includes("SuperAdmin");
   })();
 

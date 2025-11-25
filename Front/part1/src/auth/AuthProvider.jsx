@@ -96,6 +96,38 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // ---------- REGISTRO (crea y loguea) ----------
+  const register = async (email, password, username) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, userName: username }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        return {
+          ok: false,
+          message: text || "No se pudo crear la cuenta",
+        };
+      }
+
+      // Al crear, el back no devuelve token. Intentamos loguear con las mismas credenciales.
+      const loginResult = await login(email, password);
+      if (loginResult?.ok) return { ...loginResult, registered: true };
+
+      return {
+        ok: true,
+        message: "Cuenta creada. Iniciá sesión con tus datos.",
+      };
+    } catch (err) {
+      console.error(err);
+      return { ok: false, message: NETWORK_ERROR_MESSAGE };
+    }
+  };
+
   // ---------- CALLBACK QUE USA GOOGLE (credential → back → setUser) ----------
   const handleGoogleCredential = useCallback(
     async (response) => {
@@ -142,6 +174,7 @@ export function AuthProvider({ children }) {
       user,
       ready,
       login,
+      register,
       logout,
       handleGoogleCredential, // 👈 lo usás en Login.jsx
       getAuthToken,
