@@ -17,12 +17,13 @@ import AdminRestaurants from "./Pages/Admin/AdminRestaurants";
 import AdminCreateRestaurants from "./Pages/SuperAdmin/AdminCreateRestaurants";
 import Unauthorized from "./Pages/Unauthorized";
 import Contact from "./Pages/Contact";
-
+import AppPage from "./Pages/AppPage";
 function App() {
   return (
     <Routes>
       {/* Público */}
       <Route path="/" element={<HomePage />} />
+      <Route path="/app" element={<AppPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
