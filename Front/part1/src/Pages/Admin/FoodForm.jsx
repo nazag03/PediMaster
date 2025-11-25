@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFood, fetchCategories, createCategory } from "../Components/Api";
+import { createFood, fetchCategories, createCategory } from "../../Components/Api";
 import styles from "./FoodForm.module.css";
 
 export default function FoodForm() {

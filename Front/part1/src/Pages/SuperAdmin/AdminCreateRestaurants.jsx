@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./AdminCreateRestaurants.module.css";
-import { slugify } from "../config/restaurants";
-import { useAuth } from "../auth/useAuth";
-import { restaurantApi } from "../api/restaurantApi";
-import { NETWORK_ERROR_MESSAGE } from "../config/messages";
+import { slugify } from "../../config/restaurants";
+import { useAuth } from "../../auth/useAuth";
+import { restaurantApi } from "../../api/restaurantApi";
+import { NETWORK_ERROR_MESSAGE } from "../../config/messages";
 
 const DEFAULT_FORM = {
   name: "",

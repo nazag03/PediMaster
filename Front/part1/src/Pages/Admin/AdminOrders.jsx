@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useOrders } from "../context/OrderContext";
+import { useOrders } from "../../context/OrderContext";
 import styles from "./AdminOrders.module.css";
 
 function StatusBadge({ status }) {
