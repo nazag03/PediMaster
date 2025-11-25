@@ -16,6 +16,7 @@ import AdminOrders from "./Pages/Admin/AdminOrders";
 import AdminRestaurants from "./Pages/Admin/AdminRestaurants";
 import AdminCreateRestaurants from "./Pages/SuperAdmin/AdminCreateRestaurants";
 import Unauthorized from "./Pages/Unauthorized";
+import Contact from "./Pages/Contact";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       {/* Público */}
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
       {/* Cliente logueado (cualquier rol válido) */}
