@@ -3,7 +3,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import logo from "../assets/PedimasterLogo.png";
-import styles from "./Navbar.module.css";
+import styles from "./NavBar.module.css";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);

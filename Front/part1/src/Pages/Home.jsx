@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchFoods } from "../Components/Api";
-import FoodCard from "../components/FoodCard";
+import FoodCard from "../Components/FoodCard";
 import { useCart } from "../context/CartContext";
 import styles from "./Home.module.css";
 
