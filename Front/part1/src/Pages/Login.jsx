@@ -4,6 +4,7 @@ import { useAuth } from "../auth/useAuth";
 import styles from "./Login.module.css";
 import logo from "../assets/PedimasterLogo.png";
 import { Eye, EyeOff } from "lucide-react";
+import { NETWORK_ERROR_MESSAGE } from "../config/messages";
 
 export default function Login() {
   const { login, handleGoogleCredential } = useAuth();
@@ -32,7 +33,6 @@ export default function Login() {
       const res = await login(form.user.trim(), form.pass);
       setSub(false);
 
-      // si tu login() devuelve { ok, message }
       if (res?.ok) {
         nav(redirectTo, { replace: true }); // 👉 redirige al panel
       } else {
@@ -41,7 +41,7 @@ export default function Login() {
     } catch (error) {
       setSub(false);
       console.error("Error en login clásico:", error);
-      setErr("Error en login, intentá de nuevo");
+      setErr(NETWORK_ERROR_MESSAGE);
     }
   };
 
@@ -61,14 +61,18 @@ export default function Login() {
       callback: async (cred) => {
         try {
           // handleGoogleCredential se encarga de llamar al back y guardar el JWT
-          await handleGoogleCredential(cred);
+          const result = await handleGoogleCredential(cred);
 
-          // 👉 si no tiró error, redirigimos
-          nav(redirectTo, { replace: true });
+          if (result?.ok) {
+            // 👉 si no tiró error, redirigimos
+            nav(redirectTo, { replace: true });
+          } else {
+            throw new Error(result?.message);
+          }
         } catch (error) {
           console.error("Google login error:", error);
           setErr(
-            error?.message || "Error en login con Google, intentá de nuevo"
+            error?.message || NETWORK_ERROR_MESSAGE
           );
         }
       },
