@@ -1,0 +1,126 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+  color: #0f172a;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.kicker {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+}
+
+.title {
+  margin: 12px 0 8px;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.subtitle {
+  max-width: 720px;
+  margin: 0 auto;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.card p {
+  color: #475569;
+  line-height: 1.5;
+}
+
+.card ul {
+  padding-left: 18px;
+  color: #475569;
+  margin: 12px 0 16px;
+  line-height: 1.5;
+}
+
+.link {
+  color: #4f46e5;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.contactBox {
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #312e81;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+}
+
+.cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 26px;
+  }
+
+  .cards {
+    gap: 12px;
+  }
+
+  .contactBox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
