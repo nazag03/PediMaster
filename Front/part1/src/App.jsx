@@ -9,12 +9,12 @@ import SuperAdminLayout from "./layouts/SuperAdminLayout";
 import HomePage from "./Pages/HomePage";
 import Login from "./Pages/Login";
 import HomeClient from "./Pages/client/HomeClient";
-import CartPage from "./Pages/CartPage";
-import AdminFoods from "./Pages/AdminFoods";
-import FoodForm from "./Pages/FoodForm";
-import AdminOrders from "./Pages/AdminOrders";
-import AdminRestaurants from "./Pages/AdminRestaurants";
-import AdminCreateRestaurants from "./Pages/AdminCreateRestaurants";
+import CartPage from "./Pages/client/CartPage";
+import AdminFoods from "./Pages/Admin/AdminFoods";
+import FoodForm from "./Pages/Admin/FoodForm";
+import AdminOrders from "./Pages/Admin/AdminOrders";
+import AdminRestaurants from "./Pages/Admin/AdminRestaurants";
+import AdminCreateRestaurants from "./Pages/SuperAdmin/AdminCreateRestaurants";
 import Unauthorized from "./Pages/Unauthorized";
 
 function App() {
