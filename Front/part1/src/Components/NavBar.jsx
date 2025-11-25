@@ -53,7 +53,7 @@ export default function Navbar() {
           {/* 👑 Solo SuperAdmin ve este link */}
           {isSuperAdmin && (
             <NavLink
-              to="/superadmin/rotiserias/new"
+              to="/superadmin/restaurants/new"
               className={linkClass}
               onClick={() => setOpen(false)}
             >
@@ -72,7 +72,7 @@ export default function Navbar() {
                 Comidas
               </NavLink>
               <NavLink
-                to="/admin/pedidos"
+                to="/admin/orders"
                 className={linkClass}
                 onClick={() => setOpen(false)}
               >

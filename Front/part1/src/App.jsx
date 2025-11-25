@@ -11,6 +11,7 @@ import Login from "./Pages/Login";
 import HomeClient from "./Pages/client/HomeClient";
 import CartPage from "./Pages/CartPage";
 import AdminFoods from "./Pages/AdminFoods";
+import FoodForm from "./Pages/FoodForm";
 import AdminOrders from "./Pages/AdminOrders";
 import AdminRestaurants from "./Pages/AdminRestaurants";
 import AdminCreateRestaurants from "./Pages/AdminCreateRestaurants";
@@ -51,6 +52,14 @@ function App() {
           element={
             <AdminLayout>
               <AdminFoods />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/foods/new"
+          element={
+            <AdminLayout>
+              <FoodForm />
             </AdminLayout>
           }
         />

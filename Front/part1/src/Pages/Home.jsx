@@ -169,7 +169,7 @@ export default function Home() {
 
       {/* 🛒 FAB Carrito */}
       <Link
-        to="/carrito"
+        to="/cart"
         className={styles.cartFloating}
         aria-label="Ver carrito"
         title="Ver carrito"
