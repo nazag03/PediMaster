@@ -19,7 +19,8 @@ namespace Application.Services
         {
             var category = new Category
             {
-                Name = dto.Name
+                Name = dto.Name,
+                RestaurantId = dto.RestaurantId,
             };
 
             _context.Categories.Add(category);
@@ -39,6 +40,13 @@ namespace Application.Services
         public async Task<IEnumerable<CategoryResponseDto>> GetAllAsync()
         {
             return await _context.Categories
+                .Select(c => new CategoryResponseDto(c.CategoryId, c.Name))
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<CategoryResponseDto>> GetByRestaurantAsync(int restaurantId)
+        {
+            return await _context.Categories
+                .Where(c => c.RestaurantId == restaurantId)
                 .Select(c => new CategoryResponseDto(c.CategoryId, c.Name))
                 .ToListAsync();
         }

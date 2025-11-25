@@ -44,6 +44,14 @@ namespace WebApi.Controllers
             return Ok(category);
         }
 
+        // GET BY RESTAURANT
+        [HttpGet("restaurant/{restaurantId:int}")]
+        public async Task<IActionResult> GetByRestaurant(int restaurantId)
+        {
+            var categories = await _service.GetByRestaurantAsync(restaurantId);
+            return Ok(categories);
+        }
+
         // UPDATE
         [HttpPut("{id:int}")]
         [Authorize(Roles = "SuperAdmin,Admin")]

@@ -33,6 +33,7 @@ namespace Domain.Entities
         // Relaciones
         public ICollection<AdminRestaurant>? AdminRestaurants { get; set; }
         public ICollection<Food>? Foods { get; set; }
+        public ICollection<Category>? Categories { get; set; }
         public ICollection<DayliMenu>? DayliMenus { get; set; }
         public ICollection<Order>? Orders { get; set; }
 
