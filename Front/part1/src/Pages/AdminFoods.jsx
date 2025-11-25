@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { fetchFoods, deleteFood, toggleFoodAvailability } from "../Components/Api";
 import { Link } from "react-router-dom";
-import FoodCard from "../components/FoodCard";
+import FoodCard from "../Components/FoodCard";
 import { Eye, EyeOff } from "lucide-react"; // 👈 íconos livianos y lindos
 import styles from "./AdminFoods.module.css";
 
