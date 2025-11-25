@@ -10,7 +10,7 @@ export default function Login() {
   const { login, register, handleGoogleCredential } = useAuth();
   const nav = useNavigate();
   const loc = useLocation();
-  const redirectTo = loc.state?.from || "/admin/foods";
+  const redirectTo = loc.state?.from;
 
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [form, setForm] = useState({ user: "", pass: "", name: "" });
@@ -49,7 +49,7 @@ export default function Login() {
       if (res?.ok) {
         const roles = res.user?.roles ?? (res.user?.role ? [res.user.role] : []);
         const isAdmin = roles.includes("Admin") || roles.includes("SuperAdmin");
-        const target = redirectTo || (isAdmin ? "/admin/foods" : "/app");
+        const target = redirectTo ?? (isAdmin ? "/admin/foods" : "/app");
 
         if (res.user) {
           nav(target, { replace: true });
@@ -92,7 +92,7 @@ export default function Login() {
 
           if (result?.ok) {
             const target =
-              redirectTo ||
+              redirectTo ??
               (result.user?.role === "Admin" || result.user?.role === "SuperAdmin"
                 ? "/admin/foods"
                 : "/app");

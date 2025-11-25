@@ -33,6 +33,7 @@ export function decodeClaims(token) {
   }
 }
 
+// 🔹 helper: normaliza string/array a array de strings
 function normalizeRoles(rawRole) {
   if (!rawRole) return [];
 
@@ -52,17 +53,53 @@ function normalizeRoles(rawRole) {
   return [String(rawRole).trim()].filter((r) => r.length > 0);
 }
 
+// 🔹 helper: mapea código numérico a nombre “humano”
+function mapRoleCodeToName(code) {
+  // acá definís vos qué significa cada número
+  switch (code) {
+    case "0":
+      return "SuperAdmin";
+    case "1":
+      return "Admin";
+    case "2":
+      return "Client";
+    default:
+      return code; // por si en el futuro viene otra cosa
+  }
+}
+
 export function extractUserFromClaims(claims, token) {
   if (!claims) return null;
 
-  const email = EMAIL_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
+  const email =
+    EMAIL_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
+
+  // 👇 rawRole viene como "0", "1", "2" (o lista/coma, etc.)
   const rawRole = ROLE_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
-  const roles = normalizeRoles(rawRole);
-  const primaryRole = roles[0] ?? null;
-  const userId = USER_ID_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
+  const roleCodes = normalizeRoles(rawRole);      // ej: ["0"]
+  const primaryRoleCode = roleCodes[0] ?? null;   // ej: "0"
+
+  // lo traducimos a nombres
+  const mappedRoles = roleCodes.map(mapRoleCodeToName); // ["SuperAdmin"]
+  const primaryRoleName = mappedRoles[0] ?? null;        // "SuperAdmin"
+
+  const userId =
+    USER_ID_CLAIMS.map((key) => claims[key]).find(Boolean) || null;
+
   const expMs = claims.exp ? claims.exp * 1000 : null;
 
-  return { email, role: primaryRole, roles, userId, token, exp: expMs };
+  return {
+    email,
+    // código crudo que viene del back:
+    roleCode: primaryRoleCode,   // "0" | "1" | "2"
+    roleCodes: roleCodes,        // array de códigos si hubiera más
+    // nombres legibles para usar en el front:
+    role: primaryRoleName,       // "SuperAdmin" | "Admin" | "Client"
+    roles: mappedRoles,          // array de nombres
+    userId,
+    token,
+    exp: expMs,
+  };
 }
 
 export function isExpired(expMs) {
