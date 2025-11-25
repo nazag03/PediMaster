@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth"; // 👈 usamos el contexto de auth
+import { NETWORK_ERROR_MESSAGE } from "../config/messages";
+import { API_BASE_URL } from "../config/apiConfig";
 import styles from "./RotiAdd.module.css";
 
 const dayLabels = [
@@ -30,7 +32,7 @@ const createInitialAvailability = () =>
 
 export default function RotiAdd() {
   const nav = useNavigate();
-  const { user } = useAuth(); // { email, role, userId, token }
+  const { user, getAuthToken } = useAuth(); // { email, role, userId, token }
 
   // --- estados básicos ---
   const [basic, setBasic] = useState({
@@ -126,7 +128,7 @@ export default function RotiAdd() {
       return;
     }
 
-    const token = user.token;
+    const token = getAuthToken();
     if (!token) {
       setErr("Sesión no válida. Volvé a iniciar sesión.");
       return;
@@ -153,7 +155,7 @@ export default function RotiAdd() {
     };
 
     try {
-      const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/restaurants`;
+      const url = `${API_BASE_URL}/api/v1/restaurants`;
 
       console.log("POST →", url);
       console.log("JWT (primeros 40 chars) →", token.slice(0, 40) + "...");
@@ -187,7 +189,11 @@ export default function RotiAdd() {
       setAvailability(createInitialAvailability());
     } catch (error) {
       console.error(error);
-      setErr(error.message || "Error al crear la rotisería");
+      const message =
+        error?.message && error.message !== "Failed to fetch"
+          ? error.message
+          : NETWORK_ERROR_MESSAGE;
+      setErr(message);
     } finally {
       setLoading(false);
     }
