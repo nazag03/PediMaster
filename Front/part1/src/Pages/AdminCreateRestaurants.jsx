@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./AdminCreateRestaurants.module.css";
-import { createRestaurant, slugify, slugExists } from "../config/restaurants";
+import { slugify } from "../config/restaurants";
+import { useAuth } from "../auth/useAuth";
+import { restaurantApi } from "../api/restaurantApi";
+import { NETWORK_ERROR_MESSAGE } from "../config/messages";
 
 const DEFAULT_FORM = {
   name: "",
@@ -37,8 +40,11 @@ export default function AdminCreateRestaurant() {
   const [tagInput, setTagInput] = useState("");
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [serverSuccess, setServerSuccess] = useState("");
   const logoInputRef = useRef(null);
   const coverInputRef = useRef(null);
+  const { user, getAuthToken } = useAuth();
 
   // Autogenerar slug a partir del nombre (si usuario no lo tocó)
  useEffect(() => {
@@ -117,6 +123,9 @@ export default function AdminCreateRestaurant() {
       e.slug = "Usá minúsculas, números y guiones (ej: rotiseria-don-sabor)";
     if (!next.address.trim()) e.address = "La dirección es obligatoria";
     if (!next.city.trim()) e.city = "La ciudad es obligatoria";
+    if (!next.phone.trim()) e.phone = "El teléfono es obligatorio";
+    if (!next.description.trim() || next.description.trim().length < 10)
+      e.description = "La descripción debe tener al menos 10 caracteres";
     if (Number(next.minOrder) < 0) e.minOrder = "No puede ser negativo";
     if (Number(next.deliveryFee) < 0) e.deliveryFee = "No puede ser negativo";
     return e;
@@ -124,61 +133,81 @@ export default function AdminCreateRestaurant() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setServerError("");
+    setServerSuccess("");
     const baseErrors = validateSync(form);
     setErrors(baseErrors);
     if (Object.keys(baseErrors).length) return;
 
+    if (!user?.userId) {
+      setServerError("No se encontró el usuario autenticado.");
+      return;
+    }
+
+    const token = getAuthToken();
+    if (!token) {
+      setServerError("Sesión expirada. Iniciá sesión nuevamente.");
+      return;
+    }
+
     setSaving(true);
     try {
-      // Validación de unicidad de slug en el “backend” simulado
-      if (await slugExists(form.slug)) {
-        setErrors(err => ({ ...err, slug: "Ese slug ya está en uso" }));
-        setSaving(false);
-        return;
-      }
+      const availabilityOnTheDays = form.schedule.map((d) => ({
+        day: (d.day + 1) % 7, // DayOfWeek enum empieza en domingo = 0
+        active: !!d.hours.trim(),
+        allDay: true,
+        availabilityHours: [],
+      }));
 
-      // Listo para mandar a tu backend real:
-      // armamos un payload “serializable”
+      const paymentMethod = [];
+      if (form.acceptsCash) paymentMethod.push(0); // Cash
+      if (form.acceptsCard) paymentMethod.push(1); // Card
+
+      const slugValue = form.slug.trim();
+      const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://example.com";
+      const slugUrl = slugValue.startsWith("http")
+        ? slugValue
+        : `${baseUrl.replace(/\/$/, "")}/r/${slugValue}`;
+
+      const images = [];
+      if (form.coverDataUrl) images.push(form.coverDataUrl);
+
       const payload = {
+        userId: Number(user.userId),
         name: form.name.trim(),
-        slug: form.slug.trim(),
+        address: `${form.address.trim()}${form.city ? `, ${form.city.trim()}` : ""}`,
+        telephone: form.phone.trim(),
         description: form.description.trim(),
-        phone: form.phone.trim(),
-        whatsapp: form.whatsapp.trim(),
-        address: form.address.trim(),
-        city: form.city.trim(),
-        minOrder: Number(form.minOrder) || 0,
-        deliveryFee: Number(form.deliveryFee) || 0,
-        isOpen: !!form.isOpen,
-        acceptsCard: !!form.acceptsCard,
-        acceptsCash: !!form.acceptsCash,
-        tags: form.tags,
-        schedule: form.schedule,
-        // Para demo guardamos dataURL; en backend real, subí los archivos y guardá URLs
         logoUrl: form.logoDataUrl || "",
-        coverUrl: form.coverDataUrl || "",
+        images,
+        tags: form.tags,
+        minOrder: Number(form.minOrder) || 0,
+        deliveryCost: Number(form.deliveryFee) || 0,
+        whatsappNumber: form.whatsapp.trim(),
+        slug: slugUrl,
+        paymentMethod,
+        availability: { availabilityOnTheDays },
       };
 
-      const created = await createRestaurant(payload);
+      await restaurantApi.create(payload, token);
 
-      // Limpio borrador
       localStorage.removeItem("restaurant_draft");
-      alert(`✅ Restaurante creado: ${created.name}`);
-      // Opcional: redirigí a /admin/restaurants o a /r/${created.slug}
-      // navigate(`/admin/restaurants`);
+      setServerSuccess("✅ Restaurante creado correctamente");
       setForm(DEFAULT_FORM);
       if (logoInputRef.current) logoInputRef.current.value = "";
       if (coverInputRef.current) coverInputRef.current.value = "";
     } catch (err) {
       console.error(err);
-      alert("Ocurrió un error guardando el restaurante.");
+      const message = err?.message === "Failed to fetch" ? NETWORK_ERROR_MESSAGE : err?.message;
+      setServerError(message || "Ocurrió un error guardando el restaurante.");
     } finally {
       setSaving(false);
     }
   }
 
   const slugHint = useMemo(() => {
-    return form.slug ? `/r/${form.slug}` : "/r/mi-resto";
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://mi-resto.com";
+    return form.slug ? `${baseUrl}/r/${form.slug}` : `${baseUrl}/r/mi-resto`;
   }, [form.slug]);
 
   return (
@@ -220,12 +249,14 @@ export default function AdminCreateRestaurant() {
             placeholder="Comida casera, minutas y pastas. Envíos a toda la ciudad."
             rows={3}
           />
+          {errors.description && <span className={styles.err}>{errors.description}</span>}
         </div>
 
         <div className={styles.row3}>
           <div className={styles.field}>
             <label>Teléfono</label>
             <input name="phone" value={form.phone} onChange={handleChange} placeholder="3564-..." />
+            {errors.phone && <span className={styles.err}>{errors.phone}</span>}
           </div>
           <div className={styles.field}>
             <label>WhatsApp</label>
@@ -308,6 +339,9 @@ export default function AdminCreateRestaurant() {
             ))}
           </div>
         </fieldset>
+
+        {serverError && <p className={styles.err}>{serverError}</p>}
+        {serverSuccess && <p className={styles.success}>{serverSuccess}</p>}
 
         <div className={styles.row2}>
           <div className={styles.field}>

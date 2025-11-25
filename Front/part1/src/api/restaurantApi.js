@@ -13,9 +13,10 @@ export const restaurantApi = {
     }),
 
   // Solo SuperAdmin, coincide con tu RestaurantController
-  create: (payload) =>
+  create: (payload, token) =>
     apiFetch("/api/v1/restaurants", {
       method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: JSON.stringify(payload),
     }),
 };

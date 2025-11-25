@@ -32,6 +32,7 @@ input, textarea, select {
 input:focus, textarea:focus { border-color: #ff7a00; box-shadow: 0 0 0 3px rgba(255,122,0,.12); }
 
 .err { color: #b00020; font-size: 13px; }
+.success { color: #0a7b41; font-size: 13px; }
 .hint { color: #666; font-size: 13px; }
 
 .check { display: flex; gap: 8px; align-items: center; font-weight: 500; }
