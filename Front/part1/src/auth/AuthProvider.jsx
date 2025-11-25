@@ -65,7 +65,7 @@ export function AuthProvider({ children }) {
 
     saveToken(jwt);
     setUser(parsedUser);
-    return { ok: true };
+    return { ok: true, user: parsedUser };
   };
 
   // ---------- LOGIN NORMAL (email + pass) ----------
