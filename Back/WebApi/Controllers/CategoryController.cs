@@ -11,9 +11,11 @@ namespace WebApi.Controllers
     {
         private readonly ICategoryService _service;
         private readonly ILogger<CategoryController> _logger;
+        private readonly IRestaurantService _repository;
 
-        public CategoryController(ICategoryService service, ILogger<CategoryController> logger)
+        public CategoryController(ICategoryService service, ILogger<CategoryController> logger, IRestaurantService _repository)
         {
+            this._repository = _repository;
             _service = service;
             _logger = logger;
         }
@@ -23,6 +25,12 @@ namespace WebApi.Controllers
         [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto)
         {
+
+            var Restaurant = await _repository.GetByIdAsync(dto.RestaurantId);
+            if(Restaurant == null)
+            {
+                return NotFound("No se encontro el restaurante");
+            }
             var response = await _service.CreateAsync(dto);
             return Ok(response);
         }

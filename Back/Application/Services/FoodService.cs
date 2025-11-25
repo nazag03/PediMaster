@@ -14,7 +14,6 @@ namespace Application.Services
     public class FoodService : IFoodService
     {
         private readonly ApplicationDbContext _context;
-
         public FoodService(ApplicationDbContext context)
         {
             _context = context;

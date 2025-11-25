@@ -31,7 +31,7 @@ namespace Application.Services
                 Name = dto.UserName,
                 activo = true,
                 AuthProvider = "local",
-                Role = UserRole.Client.ToString()
+                Role = UserRole.SuperAdmin.ToString()
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
