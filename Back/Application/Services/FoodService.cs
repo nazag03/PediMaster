@@ -3,17 +3,13 @@ using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class FoodService : IFoodService
     {
         private readonly ApplicationDbContext _context;
+
         public FoodService(ApplicationDbContext context)
         {
             _context = context;
@@ -21,18 +17,16 @@ namespace Application.Services
 
         public async Task<FoodResponseDto> CreateAsync(CreateFoodDto dto)
         {
-            // validar restaurante
             var restaurant = await _context.Restaurants.FindAsync(dto.RestaurantId);
             if (restaurant == null)
-                throw new Exception("Restaurant not found.");
+                throw new Exception("Restaurant not found");
 
-            // validar categoría
             var category = await _context.Categories.FindAsync(dto.CategoryId);
             if (category == null)
-                throw new Exception("Category not found.");
+                throw new Exception("Category not found");
 
             if (category.RestaurantId != dto.RestaurantId)
-                throw new Exception("Category does not belong to this restaurant.");
+                throw new Exception("The selected category does not belong to the restaurant");
 
             var food = new Food
             {
@@ -85,10 +79,12 @@ namespace Application.Services
             var food = await _context.Foods.FindAsync(id);
             if (food == null) return null;
 
-            // validar categoría
             var category = await _context.Categories.FindAsync(dto.CategoryId);
             if (category == null)
-                throw new Exception("Category not found.");
+                throw new Exception("Category not found");
+
+            if (category.RestaurantId != food.RestaurantId)
+                throw new Exception("Category does not belong to the restaurant");
 
             food.Name = dto.Name;
             food.Description = dto.Description;

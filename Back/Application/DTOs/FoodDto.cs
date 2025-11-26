@@ -1,39 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.DTOs
+﻿namespace Application.DTOs
 {
-    public record CreateFoodDto(
-        string Name,
-        string? Description,
-        decimal Price,
-        string? ImageUrl,
-        bool Available,
-        int RestaurantId,
-        int CategoryId
-    );
+    public class CreateFoodDto
+    {
+        public int RestaurantId { get; set; }
+        public int CategoryId { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public string? ImageUrl { get; set; }
+        public bool Available { get; set; } = true;
+    }
 
-    public record UpdateFoodDto(
-        string Name,
-        string? Description,
-        decimal Price,
-        string? ImageUrl,
-        bool Available,
-        int CategoryId
-    );
+    public class UpdateFoodDto
+    {
+        public int CategoryId { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public string? ImageUrl { get; set; }
+        public bool Available { get; set; } = true;
+    }
 
-    public record FoodResponseDto(
-        int FoodId,
-        string Name,
-        string? Description,
-        decimal Price,
-        string? ImageUrl,
-        bool Available,
-        int RestaurantId,
-        int CategoryId
-    );
+    public class FoodResponseDto
+    {
+        public int FoodId { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public string? ImageUrl { get; set; }
+        public bool Available { get; set; }
+        public int RestaurantId { get; set; }
+        public int CategoryId { get; set; }
+
+        public FoodResponseDto() { }
+
+        public FoodResponseDto(int id, string name, string? desc, decimal price,
+            string? img, bool available, int restaurantId, int categoryId)
+        {
+            FoodId = id;
+            Name = name;
+            Description = desc;
+            Price = price;
+            ImageUrl = img;
+            Available = available;
+            RestaurantId = restaurantId;
+            CategoryId = categoryId;
+        }
+    }
 }
-

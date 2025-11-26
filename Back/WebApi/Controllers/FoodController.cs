@@ -10,10 +10,20 @@ namespace WebApi.Controllers
     public class FoodController : ControllerBase
     {
         private readonly IFoodService _service;
+        private readonly IRestaurantService _restaurantService;
+        private readonly ICategoryService _categoryService;
+        private readonly ILogger<FoodController> _logger;
 
-        public FoodController(IFoodService service)
+        public FoodController(
+            IFoodService service,
+            IRestaurantService restaurantService,
+            ICategoryService categoryService,
+            ILogger<FoodController> logger)
         {
             _service = service;
+            _restaurantService = restaurantService;
+            _categoryService = categoryService;
+            _logger = logger;
         }
 
         // CREATE
@@ -21,37 +31,58 @@ namespace WebApi.Controllers
         [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<IActionResult> Create([FromBody] CreateFoodDto dto)
         {
-            var result = await _service.CreateAsync(dto);
-            return Ok(result);
+            var restaurant = await _restaurantService.GetByIdAsync(dto.RestaurantId);
+            if (restaurant == null)
+            {
+                return NotFound("No se encontró el restaurante");
+            }
+
+            var category = await _categoryService.GetByIdAsync(dto.CategoryId);
+            if (category == null)
+            {
+                return NotFound("No se encontró la categoría");
+            }
+
+            if (category.RestaurantId != dto.RestaurantId)
+            {
+                return BadRequest("La categoría no pertenece al restaurante seleccionado");
+            }
+
+            var response = await _service.CreateAsync(dto);
+            return Ok(response);
         }
 
         // GET ALL
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _service.GetAllAsync());
+            var foods = await _service.GetAllAsync();
+            return Ok(foods);
         }
 
         // GET BY ID
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _service.GetByIdAsync(id);
-            return result == null ? NotFound() : Ok(result);
+            var food = await _service.GetByIdAsync(id);
+            if (food == null) return NotFound();
+            return Ok(food);
         }
 
         // GET BY RESTAURANT
         [HttpGet("restaurant/{restaurantId:int}")]
         public async Task<IActionResult> GetByRestaurant(int restaurantId)
         {
-            return Ok(await _service.GetByRestaurantAsync(restaurantId));
+            var foods = await _service.GetByRestaurantAsync(restaurantId);
+            return Ok(foods);
         }
 
         // GET BY CATEGORY
         [HttpGet("category/{categoryId:int}")]
         public async Task<IActionResult> GetByCategory(int categoryId)
         {
-            return Ok(await _service.GetByCategoryAsync(categoryId));
+            var foods = await _service.GetByCategoryAsync(categoryId);
+            return Ok(foods);
         }
 
         // UPDATE
@@ -59,8 +90,16 @@ namespace WebApi.Controllers
         [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateFoodDto dto)
         {
-            var result = await _service.UpdateAsync(id, dto);
-            return result == null ? NotFound() : Ok(result);
+            var category = await _categoryService.GetByIdAsync(dto.CategoryId);
+            if (category == null)
+            {
+                return NotFound("No se encontró la categoría");
+            }
+
+            var response = await _service.UpdateAsync(id, dto);
+            if (response == null) return NotFound();
+
+            return Ok(response);
         }
 
         // DELETE
@@ -69,7 +108,8 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _service.DeleteAsync(id);
-            return deleted ? NoContent() : NotFound();
+            if (!deleted) return NotFound();
+            return NoContent();
         }
     }
 }

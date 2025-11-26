@@ -12,6 +12,9 @@ namespace Application.DTOs
     public record CategoryResponseDto(
         int CategoryId,
         string Name
-    );
+    )
+    {
+        public int RestaurantId { get; set; }
+    }
 }
 
