@@ -2827,11 +2827,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj",
+      "projectUniqueName": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj",
       "projectName": "Domain",
-      "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj",
+      "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj",
       "packagesPath": "C:\\Users\\jerem\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\obj\\",
+      "outputPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\jerem\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2889,5 +2889,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

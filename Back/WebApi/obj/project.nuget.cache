@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "up70pigOzOw=",
+  "dgSpecHash": "1m4M35zlHl4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\WebApi\\WebApi.csproj",
+  "projectFilePath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\WebApi\\WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jerem\\.nuget\\packages\\automapper\\15.1.0\\automapper.15.1.0.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
@@ -110,6 +110,12 @@
     "C:\\Users\\jerem\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
   "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\WebApi\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    },
     {
       "code": "NU1701",
       "level": "Warning",

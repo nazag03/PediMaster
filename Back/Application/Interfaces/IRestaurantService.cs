@@ -16,5 +16,6 @@ namespace Application.Interfaces
         Task<RestaurantResponseDto?> GetByIdAsync(int id);
         Task<RestaurantResponseDto?> UpdateAsync(int id, UpdateRestaurantRequestDto dto);
         Task<bool> DeleteAsync(int id);
+        Task GetByIdAsync(object restaurantId);
     }
 }
