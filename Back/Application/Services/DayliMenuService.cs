@@ -50,7 +50,9 @@ namespace Application.Services
                 menu.DayliMenuId,
                 menu.Name,
                 menu.RestaurantId,
-                menu.Foods.Select(f => f.FoodId).ToList()
+                (menu.Foods ?? Enumerable.Empty<MenuFood>())
+                    .Select(f => f.FoodId)
+                    .ToList()
             );
         }
 
@@ -62,7 +64,9 @@ namespace Application.Services
                     m.DayliMenuId,
                     m.Name,
                     m.RestaurantId,
-                    m.Foods.Select(f => f.FoodId).ToList()
+                    (m.Foods ?? Enumerable.Empty<MenuFood>())
+                        .Select(f => f.FoodId)
+                        .ToList()
                 ))
                 .ToListAsync();
         }

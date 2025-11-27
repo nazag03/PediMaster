@@ -38,7 +38,9 @@ namespace Application.Services
                 MinOrder = dto.MinOrder,
                 DeliveryCost = dto.DeliveryCost,
                 WhatsappNumber = dto.WhatsappNumber,
-                PaymentMethod = dto.PaymentMethod.Select(pm => pm.ToString()).ToList(),
+                PaymentMethod = (dto.PaymentMethod ?? Enumerable.Empty<PaymentMethod>())
+                    .Select(pm => pm.ToString())
+                    .ToList(),
                 Slug = dto.Slug,
                 Availability = new Availability(),
                 CreatedAt = DateTime.UtcNow
