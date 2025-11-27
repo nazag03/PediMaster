@@ -1,0 +1,375 @@
+/* =========================
+   CONTACT PAGE – PEDIMASTER
+   SIN TOKENS, COMPLETAMENTE AUTÓNOMO
+   ========================= */
+
+/* ====== LAYOUT GENERAL ====== */
+
+.page {
+  min-height: 100vh;
+  padding: 64px clamp(16px, 5vw, 64px);
+  background:
+    radial-gradient(circle at 0 0, #fff1e6 0, #ffffff 40%),
+    radial-gradient(circle at 100% 0, #ffe4f0 0, #ffffff 40%),
+    linear-gradient(180deg, #fff7f2 0, #ffffff 70%);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  color: #121826;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ====== HEADER ====== */
+
+.headerRow {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  color: #ff6a00;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: clamp(28px, 4vw, 36px);
+  line-height: 1.1;
+}
+
+.lead {
+  margin: 0;
+  max-width: 520px;
+  color: #4b5563;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.chipsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 106, 0, 0.08);
+  border: 1px solid rgba(255, 106, 0, 0.3);
+  font-size: 12px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+/* ====== LAYOUT PRINCIPAL ====== */
+
+.layout {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+  gap: 32px;
+}
+
+/* ====== FORM CARD ====== */
+
+.formCard {
+  background: #fffaf6;
+  border-radius: 22px;
+  padding: 28px;
+  border: 1px solid #f2e5db;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.formTitle {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.formSubtitle {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inlineGroup {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.input,
+.select,
+.textarea {
+  font-family: inherit;
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e8d9cc;
+  background: #ffffff;
+  color: #111827;
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: #ff9a4a;
+  box-shadow: 0 0 0 2px rgba(255, 154, 74, 0.25);
+  transform: translateY(-1px);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+/* ====== CHECKBOX ====== */
+
+.checkboxRow {
+  margin-top: 2px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #d4c4b8;
+  border-radius: 4px;
+}
+
+/* ====== BOTONES ====== */
+
+.actions {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.submit {
+  appearance: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff6a00, #ff3a20);
+  box-shadow: 0 10px 24px rgba(255, 106, 0, 0.3);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+  align-self: flex-start;
+}
+
+.submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(255, 106, 0, 0.35);
+}
+
+.smallPrint {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ====== SIDE CARD / INFORMACIÓN ====== */
+
+.sideCard {
+  border-radius: 22px;
+  padding: 26px;
+  background: #ffffff;
+  border: 1px solid #f2e5db;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sideTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sideLead {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.infoBlock {
+  padding: 12px 0;
+  border-top: 1px solid #f4eae2;
+}
+
+.infoBlock:first-of-type {
+  border-top: none;
+}
+
+.infoLabel {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.infoValue {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #121826;
+}
+
+.infoHint {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ====== HORARIOS ====== */
+
+.scheduleCard {
+  padding: 18px;
+  border-radius: 18px;
+  background: #fff7f2;
+  border: 1px dashed #ffce6e;
+}
+
+.scheduleTitle {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.scheduleList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.scheduleList li {
+  display: flex;
+  justify-content: space-between;
+}
+
+.scheduleHint {
+  margin: 0;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* ====== MINI PANEL DEV ====== */
+
+.miniPanel {
+  padding: 18px;
+  border-radius: 18px;
+  background: #0f172a;
+  color: #e5e7eb;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.miniTitle {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.miniText {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: #d1d7e4;
+}
+
+.miniActions {
+  display: flex;
+  gap: 10px;
+}
+
+.miniBtn {
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #f97316;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.miniLink {
+  text-decoration: none;
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+/* ====== RESPONSIVE ====== */
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .headerRow {
+    flex-direction: column;
+  }
+
+  .chipsRow {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .formCard,
+  .sideCard {
+    padding: 20px;
+  }
+
+  .inlineGroup {
+    grid-template-columns: 1fr;
+  }
+}

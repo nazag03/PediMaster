@@ -4,7 +4,7 @@ import { useAuth } from "../auth/useAuth";
 
 function hasAllowedRole(user, allowedRoles) {
   if (!user) return false;
-  const roles = user.roles ?? (user.role ? [user.role] : []);
+  const roles = user.roles ?? [];
   if (!allowedRoles || allowedRoles.length === 0) return true; // si no se pasan roles, solo requiere estar logueado
   return roles.some((r) => allowedRoles.includes(r));
 }

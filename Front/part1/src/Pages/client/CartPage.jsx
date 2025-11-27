@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { useOrders } from "../context/OrderContext";
-import { ROTI, waBase } from "../config/roti";
+import { useCart } from "../../context/CartContext";
+import { useOrders } from "../../context/OrderContext";
+import { ROTI, waBase } from "../../config/roti";
 import styles from "./CartPage.module.css";
 
 export default function CartPage() {

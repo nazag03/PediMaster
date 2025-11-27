@@ -1,5 +1,5 @@
 // src/layouts/SuperAdminLayout.jsx
-import Navbar from "../Components/Navbar";
+import Navbar from "../Components/NavBar";
 
 export default function SuperAdminLayout({ children }) {
   return (

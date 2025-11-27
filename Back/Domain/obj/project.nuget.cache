@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Su7mTuwfmwI=",
+  "dgSpecHash": "dFn1VHDeX5s=",
   "success": true,
-  "projectFilePath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj",
+  "projectFilePath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jerem\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\jerem\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",

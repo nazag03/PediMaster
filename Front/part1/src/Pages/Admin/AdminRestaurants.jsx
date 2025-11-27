@@ -3,7 +3,7 @@ import styles from "./AdminRestaurants.module.css";
 
 // ⬇️ Usa el import que corresponda según dónde guardaste las funciones:
 // Si seguiste mi propuesta:
-import { listRestaurants } from "../config/restaurants";
+import { listRestaurants } from "../../config/restaurants";
 // Si las pusiste en src/config/restaurants.js, usa esto:
 // import { listRestaurants } from "../config/restaurants";
 

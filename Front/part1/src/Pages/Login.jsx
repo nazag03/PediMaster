@@ -4,18 +4,24 @@ import { useAuth } from "../auth/useAuth";
 import styles from "./Login.module.css";
 import logo from "../assets/PedimasterLogo.png";
 import { Eye, EyeOff } from "lucide-react";
+import { NETWORK_ERROR_MESSAGE } from "../config/messages";
 
 export default function Login() {
-  const { login, handleGoogleCredential } = useAuth();
+  const { login, register, handleGoogleCredential } = useAuth();
   const nav = useNavigate();
   const loc = useLocation();
-  const redirectTo = loc.state?.from || "/admin/foods";
+  const redirectTo = loc.state?.from;
 
   const [mode, setMode] = useState("login"); // "login" | "register"
-  const [form, setForm] = useState({ user: "", pass: "" });
+  const [form, setForm] = useState({ user: "", pass: "", name: "" });
   const [showPass, setShowPass] = useState(false);
   const [err, setErr] = useState("");
   const [sub, setSub] = useState(false);
+
+  useEffect(() => {
+    setErr("");
+    setSub(false);
+  }, [mode]);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -29,19 +35,40 @@ export default function Login() {
     setErr("");
 
     try {
-      const res = await login(form.user.trim(), form.pass);
+      const email = form.user.trim();
+      const password = form.pass;
+      const username = form.name.trim();
+
+      const res =
+        mode === "login"
+          ? await login(email, password)
+          : await register(email, password, username);
+
       setSub(false);
 
-      // si tu login() devuelve { ok, message }
       if (res?.ok) {
-        nav(redirectTo, { replace: true }); // 👉 redirige al panel
+        const roles = res.user?.roles ?? (res.user?.role ? [res.user.role] : []);
+        const isAdmin = roles.includes("Admin") || roles.includes("SuperAdmin");
+        const target = redirectTo ?? (isAdmin ? "/admin/foods" : "/app");
+
+        if (res.user) {
+          nav(target, { replace: true });
+        } else {
+          setMode("login");
+          setErr(res?.message || "Cuenta creada. Iniciá sesión");
+        }
       } else {
-        setErr(res?.message || "Error de autenticación");
+        setErr(
+          res?.message ||
+            (mode === "login"
+              ? "Error de autenticación"
+              : "No se pudo completar el registro")
+        );
       }
     } catch (error) {
       setSub(false);
       console.error("Error en login clásico:", error);
-      setErr("Error en login, intentá de nuevo");
+      setErr(NETWORK_ERROR_MESSAGE);
     }
   };
 
@@ -61,14 +88,23 @@ export default function Login() {
       callback: async (cred) => {
         try {
           // handleGoogleCredential se encarga de llamar al back y guardar el JWT
-          await handleGoogleCredential(cred);
+          const result = await handleGoogleCredential(cred);
 
-          // 👉 si no tiró error, redirigimos
-          nav(redirectTo, { replace: true });
+          if (result?.ok) {
+            const target =
+              redirectTo ??
+              (result.user?.role === "Admin" || result.user?.role === "SuperAdmin"
+                ? "/admin/foods"
+                : "/app");
+
+            nav(target, { replace: true });
+          } else {
+            throw new Error(result?.message);
+          }
         } catch (error) {
           console.error("Google login error:", error);
           setErr(
-            error?.message || "Error en login con Google, intentá de nuevo"
+            error?.message || NETWORK_ERROR_MESSAGE
           );
         }
       },
@@ -116,6 +152,20 @@ export default function Login() {
         </div>
 
         <form onSubmit={onSubmit} className={styles.form}>
+          {mode === "register" && (
+            <div className={styles.field}>
+              <label>Nombre</label>
+              <input
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={onChange}
+                placeholder="Tu nombre"
+                required
+              />
+            </div>
+          )}
+
           <div className={styles.field}>
             <label>Email</label>
             <input

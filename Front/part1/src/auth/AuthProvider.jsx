@@ -1,199 +1,188 @@
 // src/auth/AuthProvider.jsx
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "./AuthContext.jsx";
-
-const STORAGE_KEY = "pm_auth_token";
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5117";
-
-// helper para leer el JWT
-function parseJwt(token) {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
-    );
-    return JSON.parse(jsonPayload);
-  } catch {
-    return null;
-  }
-}
+import { API_BASE_URL } from "../config/apiConfig";
+import { NETWORK_ERROR_MESSAGE } from "../config/messages";
+import {
+  clearStoredToken,
+  getMsUntilExpiration,
+  getStoredToken,
+  parseUserFromToken,
+  saveToken,
+} from "./tokenService";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // { email, role, userId, token }
+  const [user, setUser] = useState(null); // { email, role, userId, token, exp }
   const [ready, setReady] = useState(false);
+
+  const logout = useCallback(() => {
+    clearStoredToken();
+    setUser(null);
+  }, []);
 
   // Cargar sesión guardada al montar
   useEffect(() => {
-    const token = localStorage.getItem(STORAGE_KEY);
+    const token = getStoredToken();
     if (!token) {
       setReady(true);
       return;
     }
 
-    const payload = parseJwt(token);
-    if (!payload) {
-      localStorage.removeItem(STORAGE_KEY);
+    const parsedUser = parseUserFromToken(token);
+    if (!parsedUser) {
+      clearStoredToken();
       setReady(true);
       return;
     }
 
-    const email =
-      payload[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-      ] ||
-      payload.email ||
-      null;
-
-    const role =
-      payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
-      payload.role ||
-      null;
-
-    const userId = payload["userId"] || null;
-
-    setUser({ email, role, userId, token });
+    setUser(parsedUser);
     setReady(true);
   }, []);
+
+  // Limpieza automática cuando expira el token
+  useEffect(() => {
+    if (!user?.exp) return;
+
+    const msUntilExp = getMsUntilExpiration(user.exp);
+    if (msUntilExp === 0) {
+      logout();
+      return undefined;
+    }
+
+    const timer = setTimeout(() => {
+      logout();
+    }, msUntilExp);
+
+    return () => clearTimeout(timer);
+  }, [logout, user?.exp]);
+
+  const handleSessionFromToken = (jwt) => {
+    const parsedUser = parseUserFromToken(jwt);
+    if (!parsedUser) {
+      clearStoredToken();
+      return { ok: false, message: "Sesión inválida o expirada." };
+    }
+
+    saveToken(jwt);
+    setUser(parsedUser);
+    return { ok: true, user: parsedUser };
+  };
 
   // ---------- LOGIN NORMAL (email + pass) ----------
   const login = async (email, password) => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
         const text = await res.text();
-        return { ok: false, error: text || "Credenciales inválidas" };
+        return { ok: false, message: text || "Credenciales inválidas" };
       }
 
       const data = await res.json();
       const jwt = data.jwtToken ?? data.JwtToken;
       if (!jwt) {
-        return { ok: false, error: "El servidor no devolvió un token" };
+        return { ok: false, message: "El servidor no devolvió un token" };
       }
 
-      localStorage.setItem(STORAGE_KEY, jwt);
-
-      const payload = parseJwt(jwt);
-      const emailClaim =
-        payload[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-        ] ||
-        payload.email ||
-        null;
-
-      const role =
-        payload[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ] ||
-        payload.role ||
-        null;
-
-      const userId = payload["userId"] || null;
-
-      setUser({ email: emailClaim, role, userId, token: jwt });
-      return { ok: true };
+      return handleSessionFromToken(jwt);
     } catch (err) {
       console.error(err);
-      return { ok: false, error: "No se pudo conectar al servidor" };
+      return { ok: false, message: NETWORK_ERROR_MESSAGE };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setUser(null);
+  // ---------- REGISTRO (crea y loguea) ----------
+  const register = async (email, password, username) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, userName: username }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        return {
+          ok: false,
+          message: text || "No se pudo crear la cuenta",
+        };
+      }
+
+      // Al crear, el back no devuelve token. Intentamos loguear con las mismas credenciales.
+      const loginResult = await login(email, password);
+      if (loginResult?.ok) return { ...loginResult, registered: true };
+
+      return {
+        ok: true,
+        message: "Cuenta creada. Iniciá sesión con tus datos.",
+      };
+    } catch (err) {
+      console.error(err);
+      return { ok: false, message: NETWORK_ERROR_MESSAGE };
+    }
   };
 
   // ---------- CALLBACK QUE USA GOOGLE (credential → back → setUser) ----------
   const handleGoogleCredential = useCallback(
     async (response) => {
-      console.log("🟢 CALLBACK DE GOOGLE EJECUTADO:", response);
-
       try {
         const idToken = response?.credential;
-        console.log(
-          "🔑 ID TOKEN (primeros 40 chars):",
-          idToken ? idToken.slice(0, 40) + "..." : "NULL"
-        );
 
         if (!idToken) {
-          console.log("⚠️ Google no devolvió credential");
-          return;
+          return { ok: false, message: "Google no devolvió credenciales" };
         }
 
         const url = `${API_BASE_URL}/api/v1/auth/google`;
-        console.log("📤 Enviando token al back:", url);
-
         const res = await fetch(url, {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idToken }),
         });
 
-        console.log("📥 Respuesta del back (status):", res.status);
-
         if (!res.ok) {
           const text = await res.text();
-          console.log("❌ Error desde el back:", text);
-          return;
+          return { ok: false, message: text || "No se pudo validar la cuenta" };
         }
 
         const data = await res.json();
         const jwt = data.jwtToken ?? data.JwtToken;
-        console.log(
-          "🧾 JWT recibido (primeros 40 chars):",
-          jwt?.slice(0, 40) + "..."
-        );
 
-        localStorage.setItem(STORAGE_KEY, jwt);
+        if (!jwt) {
+          return { ok: false, message: "El servidor no devolvió un token" };
+        }
 
-        const payload = parseJwt(jwt);
-
-        const email =
-          payload[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-          ] ||
-          payload.email ||
-          null;
-
-        const role =
-          payload[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-          ] ||
-          payload.role ||
-          null;
-
-        const userId = payload["userId"] || null;
-
-        setUser({ email, role, userId, token: jwt });
+        return handleSessionFromToken(jwt);
       } catch (err) {
         console.error("💥 Error en callback de Google:", err);
+        return { ok: false, message: NETWORK_ERROR_MESSAGE };
       }
     },
-    [setUser]
+    [logout]
   );
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        ready,
-        login,
-        logout,
-        handleGoogleCredential, // 👈 lo usás en Login.jsx
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const getAuthToken = useCallback(() => user?.token ?? getStoredToken(), [user]);
+
+  const contextValue = useMemo(
+    () => ({
+      user,
+      ready,
+      login,
+      register,
+      logout,
+      handleGoogleCredential, // 👈 lo usás en Login.jsx
+      getAuthToken,
+    }),
+    [getAuthToken, handleGoogleCredential, login, logout, ready, user]
   );
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
 
 // para que el import default de main.jsx funcione:

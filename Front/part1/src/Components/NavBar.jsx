@@ -3,7 +3,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import logo from "../assets/PedimasterLogo.png";
-import styles from "./Navbar.module.css";
+import styles from "./NavBar.module.css";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -16,7 +16,7 @@ export default function Navbar() {
   // soporta user.role = "SuperAdmin" o user.roles = ["SuperAdmin", ...]
   const isSuperAdmin = (() => {
     if (!user) return false;
-    const roles = user.roles ?? (user.role ? [user.role] : []);
+    const roles = user.roles ?? [];
     return roles.includes("SuperAdmin");
   })();
 
@@ -53,7 +53,7 @@ export default function Navbar() {
           {/* 👑 Solo SuperAdmin ve este link */}
           {isSuperAdmin && (
             <NavLink
-              to="/superadmin/rotiserias/new"
+              to="/superadmin/restaurants/new"
               className={linkClass}
               onClick={() => setOpen(false)}
             >
@@ -72,7 +72,7 @@ export default function Navbar() {
                 Comidas
               </NavLink>
               <NavLink
-                to="/admin/pedidos"
+                to="/admin/orders"
                 className={linkClass}
                 onClick={() => setOpen(false)}
               >
