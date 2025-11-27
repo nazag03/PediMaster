@@ -80,14 +80,14 @@ namespace Application.Services
             if (menu == null) return null;
 
             menu.Name = dto.Name;
-
+            menu.Foods ??= new List<MenuFood>();
             menu.Foods.Clear();
 
-            menu.Foods = dto.FoodIds.Select(fid => new MenuFood
-            {
-                FoodId = fid,
-                DayliMenuId = menu.DayliMenuId
-            }).ToList();
+         menu.Foods = dto.FoodIds.Select(fid => new MenuFood
+{
+            FoodId = fid,
+            DayliMenuId = menu.DayliMenuId
+        }).ToList();
 
             await _context.SaveChangesAsync();
 

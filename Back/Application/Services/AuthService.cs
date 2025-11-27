@@ -27,7 +27,14 @@ namespace Application.Services
 
         public string GenerateJwtToken(User user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var keyString = _config["Jwt:Key"];
+
+            if (string.IsNullOrWhiteSpace(keyString))
+            {
+                throw new InvalidOperationException("La clave JWT (Jwt:Key) no está configurada.");
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var roleValue = Convert.ToInt32(user.Role);
             string roleName;
