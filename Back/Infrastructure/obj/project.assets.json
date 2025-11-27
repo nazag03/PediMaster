@@ -2924,11 +2924,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Infrastructure\\Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Infrastructure\\Infrastructure.csproj",
       "projectName": "Infrastructure",
-      "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Infrastructure\\Infrastructure.csproj",
+      "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Infrastructure\\Infrastructure.csproj",
       "packagesPath": "C:\\Users\\jerem\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Infrastructure\\obj\\",
+      "outputPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\jerem\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2943,8 +2943,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMasterClon\\Back\\Domain\\Domain.csproj"
+            "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\jerem\\IdeaProjects\\GestordeGastosJAVA-PI\\PediMaster\\Back\\Domain\\Domain.csproj"
             }
           }
         }
