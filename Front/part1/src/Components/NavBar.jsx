@@ -46,7 +46,7 @@ export default function Navbar() {
 
         {/* Links */}
         <nav className={`${styles.nav__links} ${open ? styles.isOpen : ""}`}>
-          <NavLink to="/" className={linkClass} onClick={() => setOpen(false)}>
+          <NavLink to="/app" className={linkClass} onClick={() => setOpen(false)}>
             Inicio
           </NavLink>
 
