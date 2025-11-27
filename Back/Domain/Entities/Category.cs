@@ -9,9 +9,9 @@ namespace Domain.Entities
     public class Category
     {
         public int CategoryId { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
         public int RestaurantId { get; set; }
-        public Restaurant Restaurant { get; set; }
-        public ICollection<Food> Foods  { get; set; }
+        public Restaurant Restaurant { get; set; } = default!;
+        public ICollection<Food> Foods  { get; set; } = default!;
     }
 }

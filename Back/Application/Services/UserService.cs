@@ -101,11 +101,17 @@ namespace Application.Services
             var user = await GetUserByEmailAsync(email);
             if (user is null) return null;
 
+            if (string.IsNullOrEmpty(user.PasswordHash))
+            {
+                return null;
+            }
+
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
             if (result == PasswordVerificationResult.Failed) return null;
 
             return user;
         }
+
 
         public async Task<User> CreateGoogleUserAsync(CreateGoogleUserDto dto)
         {

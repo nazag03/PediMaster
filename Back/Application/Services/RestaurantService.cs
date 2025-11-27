@@ -38,7 +38,10 @@ namespace Application.Services
                 MinOrder = dto.MinOrder,
                 DeliveryCost = dto.DeliveryCost,
                 WhatsappNumber = dto.WhatsappNumber,
-                PaymentMethod = dto.PaymentMethod.Select(pm => pm.ToString()).ToList(),
+                PaymentMethod = dto.PaymentMethod?
+                    .Select(pm => pm.ToString())
+                    .ToList()
+                    ?? new List<string>(),
                 Slug = dto.Slug,
                 Availability = new Availability(),
                 CreatedAt = DateTime.UtcNow
@@ -101,8 +104,8 @@ namespace Application.Services
                  restaurant.RestaurantId,
                  restaurant.Name,
                  restaurant.Address,
-                 restaurant.Telephone,
-                 restaurant.Description,
+                 restaurant.Telephone ?? string.Empty,
+                 restaurant.Description ?? string.Empty,
                  restaurant.LogoUrl,
                  restaurant.Images,
                  restaurant.Tags,
@@ -122,8 +125,8 @@ namespace Application.Services
                  restaurant.RestaurantId,
                  restaurant.Name,
                  restaurant.Address,
-                 restaurant.Telephone,
-                 restaurant.Description,
+                 restaurant.Telephone ?? string.Empty,
+                 restaurant.Description ?? string.Empty,
                  restaurant.LogoUrl,
                  restaurant.Images,
                  restaurant.Tags,
