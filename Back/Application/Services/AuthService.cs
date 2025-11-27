@@ -29,13 +29,30 @@ namespace Application.Services
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var roleValue = Convert.ToInt32(user.Role);
+            string roleName;
+
+            switch (roleValue)
+            {
+                case 0:
+                    roleName = "SuperAdmin";
+                    break;
+                case 1:
+                    roleName = "Admin";
+                    break;
+                case 2:
+                    roleName = "Customer";
+                    break;
+                default:
+                    roleName = "Customer";
+                    break;
+            }
 
             var claims = new[]
             {
                 new Claim("userId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
-                
+                new Claim(ClaimTypes.Role, roleName),                
             };
 
             var token = new JwtSecurityToken(

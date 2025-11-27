@@ -193,5 +193,10 @@ namespace Application.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public Task GetByIdAsync(object restaurantId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
