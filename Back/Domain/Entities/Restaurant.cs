@@ -20,11 +20,11 @@ namespace Domain.Entities
         public List<string>? Tags { get; set; }
         public int? MinOrder { get; set; }
         public decimal DeliveryCost { get; set; }
-        public string Slug {  get; set; }
-        public string LogoUrl { get; set; }
-        public List <string>? Images { get; set; } 
+        public string Slug {  get; set; } = default!;
+        public string LogoUrl { get; set; } = default!;
+        public List <string>? Images { get; set; }
         public List<string>? PaymentMethod { get; set; }
-        public Availability Availability { get; set; }
+        public Availability Availability { get; set; } = default!;
 
         // FK
         public int CreatedForUserId { get; set; }
