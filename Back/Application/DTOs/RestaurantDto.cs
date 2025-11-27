@@ -38,8 +38,9 @@
     [MaxLength(20)]
     string? WhatsappNumber,
 
-        [Required]
-    [Url]
+       [Required]
+    [RegularExpression(@"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+    ErrorMessage = "Slug must contain only lowercase letters, numbers and hyphens.")]
     string Slug,
 
         List<PaymentMethod>? PaymentMethod,
