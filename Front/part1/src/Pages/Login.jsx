@@ -13,7 +13,7 @@ export default function Login() {
   const redirectTo = loc.state?.from;
 
   const [mode, setMode] = useState("login"); // "login" | "register"
-  const [form, setForm] = useState({ user: "", pass: "", name: "" });
+  const [form, setForm] = useState({ email: "", pass: "", userName: "" });
   const [showPass, setShowPass] = useState(false);
   const [err, setErr] = useState("");
   const [sub, setSub] = useState(false);
@@ -35,14 +35,14 @@ export default function Login() {
     setErr("");
 
     try {
-      const email = form.user.trim();
+      const email = form.email.trim();
       const password = form.pass;
-      const username = form.name.trim();
+      const userName = form.userName.trim();
 
       const res =
         mode === "login"
           ? await login(email, password)
-          : await register(email, password, username);
+          : await register(email, password, userName);
 
       setSub(false);
 
@@ -51,43 +51,33 @@ export default function Login() {
         const isAdmin = roles.includes("Admin") || roles.includes("SuperAdmin");
         const target = redirectTo ?? (isAdmin ? "/admin/foods" : "/app");
 
-        if (res.user) {
-          nav(target, { replace: true });
-        } else {
-          setMode("login");
-          setErr(res?.message || "Cuenta creada. Iniciá sesión");
-        }
-      } else {
-        setErr(
-          res?.message ||
-            (mode === "login"
-              ? "Error de autenticación"
-              : "No se pudo completar el registro")
-        );
+        nav(target, { replace: true });
+        return;
       }
+
+      setErr(
+        res?.message ||
+          (mode === "login"
+            ? "Error de autenticación"
+            : "No se pudo completar el registro")
+      );
     } catch (error) {
-      setSub(false);
-      console.error("Error en login clásico:", error);
+      console.error("Error en login/register:", error);
       setErr(NETWORK_ERROR_MESSAGE);
+      setSub(false);
     }
   };
 
-  // Inicializar Google y renderizar el botón una vez que la lib está lista
+  // GOOGLE LOGIN
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    console.log("CLIENT ID FRONT:", clientId);
-    console.log("ORIGIN FRONT:", window.location.origin);
 
-    if (!window.google || !window.google.accounts || !clientId) {
-      console.log("⚠️ Google no está listo o falta clientId");
-      return;
-    }
+    if (!window.google || !window.google.accounts || !clientId) return;
 
     window.google.accounts.id.initialize({
       client_id: clientId,
       callback: async (cred) => {
         try {
-          // handleGoogleCredential se encarga de llamar al back y guardar el JWT
           const result = await handleGoogleCredential(cred);
 
           if (result?.ok) {
@@ -103,9 +93,7 @@ export default function Login() {
           }
         } catch (error) {
           console.error("Google login error:", error);
-          setErr(
-            error?.message || NETWORK_ERROR_MESSAGE
-          );
+          setErr(error?.message || NETWORK_ERROR_MESSAGE);
         }
       },
     });
@@ -154,11 +142,11 @@ export default function Login() {
         <form onSubmit={onSubmit} className={styles.form}>
           {mode === "register" && (
             <div className={styles.field}>
-              <label>Nombre</label>
+              <label>Nombre de usuario</label>
               <input
-                name="name"
+                name="userName"
                 type="text"
-                value={form.name}
+                value={form.userName}
                 onChange={onChange}
                 placeholder="Tu nombre"
                 required
@@ -169,9 +157,9 @@ export default function Login() {
           <div className={styles.field}>
             <label>Email</label>
             <input
-              name="user"
+              name="email"
               type="email"
-              value={form.user}
+              value={form.email}
               onChange={onChange}
               placeholder="tucorreo@ejemplo.com"
               required

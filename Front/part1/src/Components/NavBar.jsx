@@ -19,6 +19,11 @@ export default function Navbar() {
     const roles = user.roles ?? [];
     return roles.includes("SuperAdmin");
   })();
+    const isAdmin = (() => {
+    if (!user) return false;
+    const roles = user.roles ?? [];
+    return roles.includes("Admin");
+  })();
 
   return (
     <header className={styles.nav}>
@@ -61,7 +66,7 @@ export default function Navbar() {
             </NavLink>
           )}
 
-          {user ? (
+          {(isAdmin || isSuperAdmin) ? (
             <>
               <NavLink
                 to="/admin/foods"
@@ -85,7 +90,10 @@ export default function Navbar() {
               >
                 Cargar comida
               </NavLink>
-
+            </>
+          ): null }
+                    {user ? (
+            <>
               <span className={styles.nav__hello}>
                 Hola, {user.email}
               </span>

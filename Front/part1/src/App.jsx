@@ -31,7 +31,7 @@ function App() {
       {/* Cliente logueado (cualquier rol válido) */}
       <Route element={<ProtectedRoute allowedRoles={[]} />}>
         <Route
-          path="/app"
+          path="/home"
           element={
             <ClientLayout>
               <HomeClient />

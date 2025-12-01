@@ -26,52 +26,62 @@ namespace Application.Services
 
 
         public string GenerateJwtToken(User user)
-        {
-            var keyString = _config["Jwt:Key"];
+{
+    var keyString = _config["Jwt:Key"];
 
-            if (string.IsNullOrWhiteSpace(keyString))
-            {
-                throw new InvalidOperationException("La clave JWT (Jwt:Key) no está configurada.");
-            }
+    if (string.IsNullOrWhiteSpace(keyString))
+    {
+        throw new InvalidOperationException("La clave JWT (Jwt:Key) no está configurada.");
+    }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var roleValue = Convert.ToInt32(user.Role);
-            string roleName;
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            switch (roleValue)
-            {
-                case 0:
-                    roleName = "SuperAdmin";
-                    break;
-                case 1:
-                    roleName = "Admin";
-                    break;
-                case 2:
-                    roleName = "Customer";
-                    break;
-                default:
-                    roleName = "Customer";
-                    break;
-            }
+    // 👇 NUEVO: usamos el Role como string directamente
+    var rawRole = (user.Role ?? "").Trim();
+    string roleName;
 
-            var claims = new[]
-            {
-                new Claim("userId", user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, roleName),                
-            };
+    // Permitimos tanto números ("0","1","2") como nombres ("SuperAdmin","Admin","Customer")
+    switch (rawRole)
+    {
+        case "0":
+        case "SuperAdmin":
+            roleName = "SuperAdmin";
+            break;
 
-            var token = new JwtSecurityToken(
-           issuer: _config.GetSection("Jwt:Issuer").Value,
-           audience: _config.GetSection("Jwt:Audience").Value,
-           claims: claims,
-           expires: DateTime.UtcNow.AddMinutes(30),
-           signingCredentials: creds
-              );
+        case "1":
+        case "Admin":
+            roleName = "Admin";
+            break;
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+        case "2":
+        case "Customer":
+        case "User":
+            roleName = "Customer";
+            break;
 
-        }
+        default:
+            roleName = "Customer";
+            break;
+    }
+
+    var claims = new[]
+    {
+        new Claim("userId", user.UserId.ToString()),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Role, roleName),
+    };
+
+    var token = new JwtSecurityToken(
+        issuer: _config.GetSection("Jwt:Issuer").Value,
+        audience: _config.GetSection("Jwt:Audience").Value,
+        claims: claims,
+        expires: DateTime.UtcNow.AddMinutes(30),
+        signingCredentials: creds
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}
+
     }
 }

@@ -31,3 +31,5 @@ export const authApi = {
 // exports nombrados para el AuthProvider "nuevo"
 export const login = (email, password) => authApi.login(email, password);
 export const googleLogin = (idToken) => authApi.googleLogin(idToken);
+export const register = (email, password, userName) =>
+  authApi.register({ email, password, userName });

@@ -60,6 +60,7 @@ export default function AdminOrders() {
                 <th>ID</th>
                 <th>Fecha</th>
                 <th>Cliente</th>
+                <th>Direccion</th>
                 <th>Items</th>
                 <th>Subtotal</th>
                 <th>Estado</th>
@@ -75,6 +76,7 @@ export default function AdminOrders() {
                     <div>{o?.customer?.name || "—"}</div>
                     <small className={styles.muted}>{o?.customer?.phone || "—"}</small>
                   </td>
+                  <td>"Direccion"</td>
                   <td>
                     <ul className={styles.itemsList}>
                       {o.items.map(it => (
