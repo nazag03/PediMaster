@@ -63,7 +63,15 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
             >
               Nueva rotisería
+            </NavLink>,
+            <NavLink
+              to="/superadmin/forms/users"
+              className={linkClass}
+              onClick={() => setOpen(false)}
+            >
+              SuperAdmin
             </NavLink>
+            
           )}
 
           {(isAdmin || isSuperAdmin) ? (
@@ -90,6 +98,14 @@ export default function Navbar() {
               >
                 Cargar comida
               </NavLink>
+              <NavLink
+                to=""
+                className={linkClass}
+                onClick={() => setOpen(false)}
+              >
+                Admin
+              </NavLink>
+              
             </>
           ): null }
                     {user ? (

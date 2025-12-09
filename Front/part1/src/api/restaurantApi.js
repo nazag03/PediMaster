@@ -2,7 +2,7 @@
 import { apiFetch } from "./apiClient";
 
 export const restaurantApi = {
-  getAll: () =>
+  getAllRestaurants: () =>
     apiFetch("/api/v1/restaurants", {
       method: "GET",
     }),
@@ -12,14 +12,21 @@ export const restaurantApi = {
       method: "GET",
     }),
 
-  // Solo SuperAdmin, coincide con tu RestaurantController
-  create: (payload, token) =>
+  // Solo SuperAdmin
+  create: (payload) =>
     apiFetch("/api/v1/restaurants", {
       method: "POST",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: JSON.stringify(payload),
+    }),
+
+  // UPDATE restaurant (activar, desactivar, cambiar dueño, etc.)
+  update: (id, payload) =>
+    apiFetch(`/api/v1/restaurants/${id}`, {
+      method: "PUT",
       body: JSON.stringify(payload),
     }),
 };
+
 
 
 const MOCK_RESTAURANTS = [

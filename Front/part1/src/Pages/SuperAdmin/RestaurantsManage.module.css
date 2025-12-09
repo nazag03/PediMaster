@@ -1,0 +1,255 @@
+.page {
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.subTitle {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.error {
+  margin-top: 1rem;
+  color: #b91c1c;
+}
+
+.actionsHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.counterChip {
+  background: #f97316;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.btnPrimary {
+  text-decoration: none;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: #f97316;
+  color: #ffffff;
+}
+
+.btnPrimary:hover {
+  background: #ea580c;
+}
+
+/* Tabla */
+
+.tableWrapper {
+  background: #ffffff;
+  border-radius: 0.85rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.table thead {
+  background: #f9fafb;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table th {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.table tbody tr:hover {
+  background: #f3f4f6;
+}
+
+/* Estado */
+
+.btnActive,
+.btnInactive {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.btnActive {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btnInactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Acciones */
+
+.actionsCell {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.btnSecondary {
+  text-decoration: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  cursor: pointer;
+  color: #111827;
+}
+
+.btnSecondary:hover {
+  background: #f3f4f6;
+}
+
+.btnGhost {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: none;
+  background: #e5e7eb;
+  cursor: pointer;
+  color: #111827;
+}
+
+.btnGhost:hover {
+  background: #d1d5db;
+}
+
+/* Responsive */
+
+@media (max-width: 640px) {
+  .page {
+    padding: 1rem;
+  }
+
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actionsHeader {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+.btnAssign {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: none;
+  background: #fee2e2;
+  cursor: pointer;
+  color: #b91c1c;
+}
+
+.btnAssign:hover {
+  background: #fecaca;
+}
+
+/* Modal reutilizado */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 0.9rem;
+  padding: 1.5rem 1.75rem;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
+}
+
+.modalTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.ownerList {
+  margin-top: 0.5rem;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.6rem;
+  padding: 0.4rem;
+}
+
+.ownerItem {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.ownerItem:hover {
+  background: #f9fafb;
+}
+
+.ownerName {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.ownerEmail,
+.ownerRole {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.ownerEmpty {
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

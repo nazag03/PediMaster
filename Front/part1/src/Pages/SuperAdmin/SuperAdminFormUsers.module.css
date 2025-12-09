@@ -1,0 +1,145 @@
+/* src/pages/superadmin/SuperAdminFormUsers.module.css */
+
+.container {
+  max-width: 520px;
+  margin: 2.5rem auto;
+  padding: 2rem 2.4rem;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 107, 26, 0.12);
+}
+
+.title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-bottom: 1.8rem;
+  color: #ff6b1a;
+  letter-spacing: 0.02em;
+}
+
+/* FORM */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.form input,
+.form select {
+  border-radius: 999px;
+  border: 1px solid #e4e4e4;
+  padding: 0.65rem 0.95rem;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fafafa;
+  transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease,
+    transform 0.08s ease;
+}
+
+.form input:focus,
+.form select:focus {
+  border-color: #ff6b1a;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 107, 26, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Mensajes de estado */
+
+.error,
+.success {
+  border-radius: 999px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+}
+
+.error {
+  background: #ffe5e5;
+  color: #a10000;
+  border: 1px solid #ffc2c2;
+}
+
+.success {
+  background: #e7fff2;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+/* Botón */
+
+.saveBtn {
+  margin-top: 0.6rem;
+  width: 100%;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  border: none;
+  outline: none;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff8a3c, #ff6b1a);
+  color: #ffffff;
+  box-shadow: 0 14px 28px rgba(255, 107, 26, 0.45);
+  transition: transform 0.1s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.saveBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(255, 107, 26, 0.55);
+}
+
+.saveBtn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 10px 20px rgba(255, 107, 26, 0.45);
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+  .container {
+    margin: 1.5rem 1rem;
+    padding: 1.5rem 1.4rem;
+    border-radius: 16px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .form label {
+    font-size: 0.85rem;
+  }
+
+  .form input,
+  .form select {
+    font-size: 0.9rem;
+    padding: 0.55rem 0.85rem;
+  }
+
+  .saveBtn {
+    font-size: 0.9rem;
+    padding: 0.7rem 0.9rem;
+  }
+}

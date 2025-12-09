@@ -49,7 +49,7 @@
     AvailabilityRequestDto Availability
     );
 
-    public record RestaurantResponseDto(
+ public record RestaurantResponseDto(
      int RestaurantId,
      string Name,
      string Address,
@@ -60,8 +60,14 @@
      List<string>? Tags,
      decimal DeliveryCost,
      int? MinOrder,
-     string Slug
- );
+     string Slug,
+
+    
+     int? OwnerUserId,
+     string? OwnerName,
+     string? OwnerEmail
+);
+
 
     public record UpdateRestaurantRequestDto(
       [Required]

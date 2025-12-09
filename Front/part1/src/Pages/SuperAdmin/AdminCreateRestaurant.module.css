@@ -1,0 +1,228 @@
+/* src/pages/AdminCreateRestaurant.module.css */
+
+.container {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #ff6b1a;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.field input,
+.field textarea {
+  border-radius: 10px;
+  border: 1px solid #e2e2e2;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: #ff6b1a;
+  box-shadow: 0 0 0 2px rgba(255, 107, 26, 0.1);
+}
+
+.help {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.paymentGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  margin-top: 0.3rem;
+}
+
+.checkboxLabel {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.primary,
+.secondary {
+  border-radius: 999px;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.primary {
+  background: #ff6b1a;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(255, 107, 26, 0.35);
+}
+
+.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(255, 107, 26, 0.45);
+}
+
+.secondary {
+  background: #f3f3f3;
+  color: #333;
+}
+
+.secondary:hover:not(:disabled) {
+  background: #e6e6e6;
+}
+
+.primary:disabled,
+.secondary:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+.error {
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  background: #ffe5e5;
+  color: #a10000;
+  font-size: 0.9rem;
+}
+
+.success {
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  background: #e5ffe9;
+  color: #047857;
+  font-size: 0.9rem;
+}
+.field select {
+  border-radius: 10px;
+  border: 1px solid #e2e2e2;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+}
+
+.field select:focus {
+  border-color: #ff6b1a;
+  box-shadow: 0 0 0 2px rgba(255, 107, 26, 0.1);
+}
+
+/* TAGS */
+
+.tagsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag,
+.tagSelected {
+  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  font-size: 0.85rem;
+  border: 1px solid #ffb58a;
+  background: #fff7f2;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease,
+    box-shadow 0.15s ease, border 0.15s ease;
+}
+
+.tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(255, 107, 26, 0.25);
+}
+
+.tagSelected {
+  background: #ff6b1a;
+  color: #fff;
+  border-color: #ff6b1a;
+  box-shadow: 0 4px 10px rgba(255, 107, 26, 0.35);
+}
+
+.tagInputRow {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.tagInputRow input {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid #e2e2e2;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.tagInputRow input:focus {
+  border-color: #ff6b1a;
+  box-shadow: 0 0 0 2px rgba(255, 107, 26, 0.1);
+}
+
+.smallButton {
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: #ff6b1a;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(255, 107, 26, 0.35);
+  white-space: nowrap;
+}
+
+.smallButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(255, 107, 26, 0.45);
+}

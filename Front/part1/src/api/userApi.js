@@ -2,7 +2,7 @@
 import { apiFetch } from "./apiClient";
 
 export const userApi = {
-  getAll: () =>
+  getAllUsers: () =>
     apiFetch("/api/v1/users", {
       method: "GET",
     }),
