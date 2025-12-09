@@ -18,6 +18,7 @@ namespace Infrastructure.Data
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<DetailOrder> DetailOrders { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
