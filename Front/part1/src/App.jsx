@@ -26,10 +26,10 @@ import AdminRestaurants from "./Pages/Admin/AdminRestaurants";
 import AdminCreateRestaurants from "./Pages/SuperAdmin/AdminCreateRestaurants";
 import SuperAdminFormUsers from "./Pages/SuperAdmin/SuperAdminFormUsers";
 import SuperAdminFormRestaurants from "./Pages/SuperAdmin/SuperAdminFormRestaurants";
-import SuperAdminFormTags from "./Pages/SuperAdmin/SuperAdminFormTags";
 import SuperAdminDashboard from "./Pages/SuperAdmin/SuperAdminDashboard";
 import UsersManage from "./Pages/SuperAdmin/UsersManage"
 import RestaurantsManage from "./Pages/SuperAdmin/RestaurantsManage"
+import TagsForm from "./Pages/SuperAdmin/TagsForm"
 
 function App() {
   return (
@@ -92,7 +92,7 @@ function App() {
           />
           <Route
             path="/superadmin/forms/tags"
-            element={<SuperAdminFormTags />}
+            element={<TagsForm />}
           />
           <Route 
             path="/superadmin/users" 
