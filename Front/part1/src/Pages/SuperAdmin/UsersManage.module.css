@@ -1,0 +1,408 @@
+.page {
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.subTitle {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.error {
+  margin-top: 1rem;
+  color: #b91c1c;
+}
+
+.counterChip {
+  background: #f97316;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+/* Tabla */
+
+.tableWrapper {
+  background: #ffffff;
+  border-radius: 0.85rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.table thead {
+  background: #f9fafb;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table th {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.table tbody tr:hover {
+  background: #f3f4f6;
+}
+
+/* Select rol */
+
+.select {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.8rem;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px #fed7aa;
+}
+
+.roleHint {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+}
+
+/* Botones activo/inactivo */
+
+.btnActive,
+.btnInactive {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.btnActive {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btnInactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Botón detalle */
+
+.btnDetail {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.btnDetail:hover {
+  background: #d1d5db;
+}
+
+/* Modal */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 0.9rem;
+  padding: 1.5rem 1.75rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
+}
+
+.modalTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.modalSubtitle {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.modalLine {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.restaurantList {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  font-size: 0.85rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.restaurantEmpty {
+  list-style: none;
+  color: #6b7280;
+}
+
+.btnClose {
+  margin-top: 1rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: #f97316;
+  color: #fff;
+}
+
+.btnClose:hover {
+  background: #ea580c;
+}
+
+/* Responsive */
+
+@media (max-width: 640px) {
+  .page {
+    padding: 1rem;
+  }
+}
+.filtersRow {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1 1 240px;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.85rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px #fed7aa;
+}
+
+.filterSelect {
+  flex: 0 0 180px;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  font-size: 0.85rem;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px #fed7aa;
+}
+.actionsCell {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.btnDelete {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.btnDelete:hover {
+  background: #fecaca;
+}
+
+/* === MODAL ELIMINAR (ESTILO PEDIMASTER: NARANJA/BLANCO) === */
+
+.deleteModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card principal */
+.deleteModal {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px 28px 22px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+  animation: modalPop 0.25s ease;
+}
+
+/* Animación suave */
+@keyframes modalPop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Badge de advertencia */
+.deletePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,102,0,0.12);
+  padding: 4px 12px;
+  border-radius: 99px;
+  color: #ff4d00;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.deletePillDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #ff4d00;
+}
+
+/* Título grande */
+.deleteModalTitle {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+/* Subtexto */
+.deleteModalText {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 18px;
+}
+
+/* Tarjeta con datos del usuario */
+.deleteUserSummary {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.deleteUserName {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #222;
+  margin-right: 6px; /* ← agrega un espacio debajo del nombre */
+}
+
+
+.deleteUserEmail {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Error */
+.deleteError {
+  color: #d80000;
+  background: #ffe5e5;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #ffb3b3;
+  margin-bottom: 12px;
+}
+
+/* Botonera */
+.deleteModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Cancelar */
+.btnCancelDelete {
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  color: #374151;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btnCancelDelete:hover {
+  background: #e5e7eb;
+}
+
+/* ELIMINAR (NARANJA PEDIMASTER) */
+.btnConfirmDelete {
+  padding: 9px 20px;
+  border-radius: 10px;
+  background: #ff4d00; /* naranja rojizo tipo PedidosYa */
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(255,77,0,0.35);
+  transition: 0.2s ease;
+}
+
+.btnConfirmDelete:hover {
+  background: #e34300;
+  box-shadow: 0 8px 20px rgba(255,77,0,0.45);
+}
+
+.btnConfirmDelete:disabled,
+.btnCancelDelete:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+

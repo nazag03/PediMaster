@@ -43,7 +43,7 @@ body {
 .cardRegister {
   border-color: rgba(123, 63, 243, 0.25);
   box-shadow: 0 10px 30px rgba(123, 63, 243, 0.12);
-}
+}a
 
 .header {
   display: flex;
@@ -260,12 +260,12 @@ body {
 
 /* cuando estás en login y el link dice "Registrate" */
 .linkLogin {
-  color: var(--purple);
+  color: var(--orange);
 }
 
 /* cuando estás en register y el link dice "Iniciá sesión" */
 .linkRegister {
-  color: var(--orange);
+  color: var(--purple);
 }
 
 
@@ -274,4 +274,100 @@ body {
   font-size: 0.8rem;
   text-align: center;
   margin-top: 0.5rem;
+}
+
+.wrap {
+  position: relative;
+}
+
+/* —————— GORRO IZQUIERDA —————— */
+.wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://png.pngtree.com/png-vector/20210303/ourlarge/pngtree-cartoon-white-restaurant-chef-hat-png-image_2987303.jpg");
+  background-repeat: no-repeat;
+
+  background-position: left center;
+  margin-left: -550px; /* tu ajuste personalizado */
+
+  background-size: 40%;
+  opacity: 0.12;
+
+  z-index: 1;
+  pointer-events: none;
+
+  animation: float 6s ease-in-out infinite;
+}
+
+/* —————— PIZZA DERECHA —————— */
+.wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://previews.123rf.com/images/vladischern/vladischern1712/vladischern171200041/91537178-italian-pizza-pizza-design-template-hand-drawn-vector-illustration-realistic-sketch.jpg");
+  background-repeat: no-repeat;
+
+  background-position: right center;
+  margin-right: -550px; /* tu ajuste personalizado */
+
+  background-size: 40%;
+  opacity: 0.10;
+
+  z-index: 1;
+  pointer-events: none;
+
+  animation: float 7s ease-in-out infinite;
+}
+
+/* —————— ANIMACIÓN —————— */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+
+/* —————— CARD arriba del fondo —————— */
+.card {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ————————————————————————————————
+   📱 RESPONSIVE: HASTA 720×480
+——————————————————————————————— */
+@media (max-width: 720px), (max-height: 480px) {
+
+  /* Centrar mejor todo */
+  .wrap {
+    padding: 0.5rem;
+  }
+
+  .card {
+    max-width: 100%;
+    padding: 1.5rem;
+    margin: 0 0.5rem;
+  }
+
+  /* Fondo adaptado: se muestra SOLO EL GORRO para que no tape nada */
+
+  .wrap::before {
+    background-position: center top 12%;
+    margin-left: 0;             /* quitar desplazamiento */
+    background-size: 70%;       /* más chico */
+    opacity: 0.10;
+  }
+
+  .wrap::after {
+    background-image: none;     /* ocultar pizza en pantallas pequeñas */
+  }
+}
+
+
+@media (max-width: 720px) {
+  .wrap::before,
+  .wrap::after {
+    background-image: none !important;
+  }
 }

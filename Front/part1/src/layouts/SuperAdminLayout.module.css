@@ -1,0 +1,22 @@
+/* src/layouts/SuperAdminLayout.module.css */
+.layout {
+  display: flex;
+
+}
+
+.main {
+  flex: 1;
+  margin-left: 260px; /* ancho del sidebar */
+  padding-top: 90px;  /* 70 navbar + 20 espacio */
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
+
+  background: #f6f6f7;
+  min-height: 100vh;
+}
+
+.mainInner {
+  max-width: 1200px;
+  margin: 0 auto;
+}

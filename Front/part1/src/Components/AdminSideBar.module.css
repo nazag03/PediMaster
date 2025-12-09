@@ -1,0 +1,131 @@
+.sidebar {
+  position: fixed;
+  top: 70px;          /* misma altura que el navbar */
+  bottom: 0;          /* llega hasta el fondo de la ventana */
+  left: 0;
+  width: 260px;
+
+  background: #1d1d1f;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px 24px; /* padding extra abajo */
+  border-right: 1px solid #2b2b2d;
+
+  overflow-y: auto;   /* si algún día el contenido es muy largo, scrollea */
+}
+
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.brand img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ff7a00; /* naranja pedimaster */
+}
+
+.brandSubtitle {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navGroupTitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 0.6;
+  padding-left: 6px;
+  letter-spacing: 0.5px;
+}
+
+.navItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem {
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: #d1d1d1;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.15s ease;
+}
+
+.navItem:hover {
+  background: #2a2a2c;
+  color: #fff;
+}
+
+.navItemActive {
+  background: #ff7a00;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.userBox {
+  padding-top: 20px;
+  border-top: 1px solid #2b2b2d;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.userEmail {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.logoutBtn {
+  margin-top: 10px;
+  padding: 10px;
+  background: #ff7a00;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logoutBtn:hover {
+  background: #e96d00;
+}

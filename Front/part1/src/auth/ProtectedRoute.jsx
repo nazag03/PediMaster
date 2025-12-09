@@ -1,16 +1,33 @@
-// src/auth/ProtectedRoute.jsx
+// src/router/ProtectedRoute.jsx
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "./useAuth";
+import { useAuth } from "../auth/useAuth";
 
-export default function ProtectedRoute() {
+function hasAllowedRole(user, allowedRoles) {
+  if (!user) return false;
+  const roles = user.roles ?? [];
+  if (!allowedRoles || allowedRoles.length === 0) return true; // si no se pasan roles, solo requiere estar logueado
+  return roles.some((r) => allowedRoles.includes(r));
+}
+
+export default function ProtectedRoute({ allowedRoles = [] }) {
   const { user, ready } = useAuth();
   const loc = useLocation();
 
-  if (!ready) return null; // o un spinner
-
-  if (!user) {
-    return <Navigate to="/login" replace state={{ from: loc.pathname }} />;
+  if (!ready) {
+    // Mientras carga el estado de auth podés mostrar un loader
+    return <div>Cargando...</div>;
   }
 
+  if (!user) {
+    // No logueado → al login
+    return <Navigate to="/login" state={{ from: loc.pathname }} replace />;
+  }
+
+  if (!hasAllowedRole(user, allowedRoles)) {
+    // Logueado pero sin permiso
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // Todo OK → renderizar lo que venga dentro
   return <Outlet />;
 }

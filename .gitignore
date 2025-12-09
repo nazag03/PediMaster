@@ -1,0 +1,7 @@
+# Dependencias y artefactos de compilación
+node_modules/
+dist/
+.vs/
+bin/
+obj/
+**/.vite/

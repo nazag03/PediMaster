@@ -38,7 +38,7 @@
     [MaxLength(20)]
     string? WhatsappNumber,
 
-        [Required]
+       [Required]
     [RegularExpression(@"^[a-z0-9]+(?:-[a-z0-9]+)*$",
     ErrorMessage = "Slug must contain only lowercase letters, numbers and hyphens.")]
     string Slug,
@@ -49,7 +49,7 @@
     AvailabilityRequestDto Availability
     );
 
-    public record RestaurantResponseDto(
+ public record RestaurantResponseDto(
      int RestaurantId,
      string Name,
      string Address,
@@ -60,8 +60,12 @@
      List<string>? Tags,
      decimal DeliveryCost,
      int? MinOrder,
-     string Slug
- );
+     string Slug,
+     int? OwnerUserId,
+     string? OwnerName,
+     string? OwnerEmail
+);
+
 
     public record UpdateRestaurantRequestDto(
       [Required]
