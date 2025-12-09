@@ -24,16 +24,20 @@ namespace WebApi.Controllers
 
         // CREATE
         [HttpPost]
-        [Authorize(Roles = "SuperAdmin,Admin")]
-        public async Task<IActionResult> Create([FromBody] CreateTagDto dto)
-        {
-            var restaurant = await _restaurantService.GetByIdAsync(dto.RestaurantId);
-            if (restaurant == null)
-                return NotFound("Restaurant not found");
+[Authorize(Roles = "SuperAdmin,Admin")]
+public async Task<IActionResult> Create([FromBody] CreateTagDto dto)
+{
+    if (dto.RestaurantId != null)
+    {
+        var restaurant = await _restaurantService.GetByIdAsync(dto.RestaurantId.Value);
+        if (restaurant == null)
+            return NotFound("Restaurant not found");
+    }
 
-            var response = await _service.CreateAsync(dto);
-            return Ok(response);
-        }
+    var response = await _service.CreateAsync(dto);
+    return Ok(response);
+}
+
 
         // GET ALL
         [HttpGet]

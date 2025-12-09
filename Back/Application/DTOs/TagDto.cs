@@ -9,11 +9,12 @@ namespace Application.DTOs
 {
     public class CreateTagDto
     {
-        public int RestaurantId { get; set; }
-
         [Required]
         [MinLength(2), MaxLength(50)]
         public string Name { get; set; } = null!;
+
+        // Puede ser null si el tag es global
+        public int? RestaurantId { get; set; }
     }
 
     public class UpdateTagDto
@@ -27,11 +28,11 @@ namespace Application.DTOs
     {
         public int TagId { get; set; }
         public string Name { get; set; } = null!;
-        public int RestaurantId { get; set; }
+        public int? RestaurantId { get; set; }
 
         public TagResponseDto() { }
 
-        public TagResponseDto(int id, string name, int restaurantId)
+        public TagResponseDto(int id, string name, int? restaurantId)
         {
             TagId = id;
             Name = name;
@@ -39,4 +40,3 @@ namespace Application.DTOs
         }
     }
 }
-

@@ -48,6 +48,8 @@ builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddScoped<ITagService, TagService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",

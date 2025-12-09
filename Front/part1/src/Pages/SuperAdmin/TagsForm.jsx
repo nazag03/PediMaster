@@ -8,8 +8,7 @@ const GLOBAL_RESTAURANT_ID = 0; // 👈 para tags "globales"
 function normalizeTag(dto) {
   return {
     id: dto.id ?? dto.tagId,
-    name: dto.name,
-    restaurantId: dto.restaurantId,
+    name: dto.name
   };
 }
 
@@ -55,33 +54,35 @@ export default function SuperAdminFormTags() {
   }, []);
 
   async function addTag() {
-    const value = newTag.trim().toLowerCase();
-    if (!value) return;
-    if (tags.some((t) => t.name.toLowerCase() === value)) return;
+  const value = newTag.trim().toLowerCase();
+  if (!value) return;
+  if (tags.some((t) => t.name.toLowerCase() === value)) return;
 
-    setSaving(true);
-    setErr("");
-    setOk("");
+  setSaving(true);
+  setErr("");
+  setOk("");
 
-    try {
-      const payload = {
-        restaurantId: GLOBAL_RESTAURANT_ID,
-        name: value,
-      };
+  try {
+    const payload = {
+      name: value,           // 👈 sacamos restaurantId
+    };
 
-      const created = await tagApi.create(payload);
-      const normalized = normalizeTag(created);
+    console.log("👉 Payload tags:", payload);
 
-      setTags((prev) => [...prev, normalized]);
-      setNewTag("");
-      setOk("Tag creada correctamente.");
-    } catch (e) {
-      console.error(e);
-      setErr("No se pudo crear la tag.");
-    } finally {
-      setSaving(false);
-    }
+    const created = await tagApi.create(payload);
+    const normalized = normalizeTag(created);
+
+    setTags((prev) => [...prev, normalized]);
+    setNewTag("");
+    setOk("Tag creada correctamente.");
+  } catch (e) {
+    console.error(e);
+    setErr("No se pudo crear la tag.");
+  } finally {
+    setSaving(false);
   }
+}
+
 
   async function removeTag(tagId) {
     if (!tagId) return;
