@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Entities.Availables;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace Application.Services
 {
@@ -20,11 +21,8 @@ namespace Application.Services
 
         public async Task<RestaurantResponseDto> CreateAsync(CreateRestaurantRequestDto dto)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserId == dto.UserId);
-
-            if (user is null)
-                throw new KeyNotFoundException("User not found");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+            if (user is null) { throw new KeyNotFoundException("User not found"); };
 
             var restaurant = new Restaurant
             {
@@ -47,9 +45,10 @@ namespace Application.Services
                 Slug = dto.Slug,
                 Availability = new Availability(),
                 CreatedAt = DateTime.UtcNow
+
+
             };
 
-            // Availability
             foreach (var dayDto in dto.Availability.AvailabilityOnTheDays)
             {
                 var dayEntity = new AvailabilityOnTheDay
@@ -69,6 +68,7 @@ namespace Application.Services
                             Init = TimeSpan.TryParse(hourDto.Init, out var init)
                                 ? init
                                 : throw new Exception("Invalid Init value"),
+
                             End = TimeSpan.TryParse(hourDto.End, out var end)
                                 ? end
                                 : throw new Exception("Invalid End value")
@@ -86,77 +86,53 @@ namespace Application.Services
                 restaurant.RestaurantId,
                 restaurant.Name,
                 restaurant.Address,
-                restaurant.Telephone ?? string.Empty,
-                restaurant.Description ?? string.Empty,
+                restaurant.Telephone,
+                restaurant.Description,
                 restaurant.LogoUrl,
                 restaurant.Images,
                 restaurant.Tags,
                 restaurant.DeliveryCost,
                 restaurant.MinOrder,
-                restaurant.Slug,
-                // dueño
-                restaurant.CreatedForUserId,
-                user.Name ?? user.Email,
-                user.Email
+                restaurant.Slug
             );
         }
 
         public async Task<IEnumerable<RestaurantResponseDto>> GetAllAsync()
         {
-            var restaurants = await _context.Restaurants
-                .Include(r => r.CreatedFor)
+            return await _context.Restaurants
+                .Select(restaurant => new RestaurantResponseDto(
+                 restaurant.RestaurantId,
+                 restaurant.Name,
+                 restaurant.Address,
+                 restaurant.Telephone ?? string.Empty,
+                 restaurant.Description ?? string.Empty,
+                 restaurant.LogoUrl,
+                 restaurant.Images,
+                 restaurant.Tags,
+                 restaurant.DeliveryCost,
+                 restaurant.MinOrder,
+                 restaurant.Slug
+                ))
                 .ToListAsync();
-
-            return restaurants.Select(restaurant =>
-                new RestaurantResponseDto(
-                    restaurant.RestaurantId,
-                    restaurant.Name,
-                    restaurant.Address,
-                    restaurant.Telephone ?? string.Empty,
-                    restaurant.Description ?? string.Empty,
-                    restaurant.LogoUrl,
-                    restaurant.Images,
-                    restaurant.Tags,
-                    restaurant.DeliveryCost,
-                    restaurant.MinOrder,
-                    restaurant.Slug,
-                    // dueño
-                    restaurant.CreatedForUserId,
-                    restaurant.CreatedFor != null
-                        ? (restaurant.CreatedFor.Name ?? restaurant.CreatedFor.Email)
-                        : null,
-                    restaurant.CreatedFor?.Email
-                )
-            );
         }
 
         public async Task<RestaurantResponseDto?> GetByIdAsync(int id)
         {
-            var restaurant = await _context.Restaurants
-                .Include(r => r.CreatedFor)
-                .Include(r => r.Availability)
-                .FirstOrDefaultAsync(r => r.RestaurantId == id);
-
+            var restaurant = await _context.Restaurants.FindAsync(id);
             if (restaurant == null) return null;
 
             return new RestaurantResponseDto(
-                restaurant.RestaurantId,
-                restaurant.Name,
-                restaurant.Address,
-                restaurant.Telephone ?? string.Empty,
-                restaurant.Description ?? string.Empty,
-                restaurant.LogoUrl,
-                restaurant.Images,
-                restaurant.Tags,
-                restaurant.DeliveryCost,
-                restaurant.MinOrder,
-                restaurant.Slug,
-                // dueño
-                restaurant.CreatedForUserId,
-                restaurant.CreatedFor != null
-                    ? (restaurant.CreatedFor.Name ?? restaurant.CreatedFor.Email)
-                    : null,
-                restaurant.CreatedFor?.Email
+                 restaurant.RestaurantId,
+                 restaurant.Name,
+                 restaurant.Address,
+                 restaurant.Telephone ?? string.Empty,
+                 restaurant.Description ?? string.Empty,
+                 restaurant.LogoUrl,
+                 restaurant.Images,
+                 restaurant.Tags,
+                 restaurant.DeliveryCost,
+                 restaurant.MinOrder,
+                 restaurant.Slug
             );
         }
 
@@ -164,18 +140,17 @@ namespace Application.Services
         {
             var restaurant = await _context.Restaurants
                 .Include(r => r.Availability)
-                .Include(r => r.CreatedFor)
+                .Include(u => u.CreatedFor)
                 .FirstOrDefaultAsync(r => r.RestaurantId == id);
 
             if (restaurant == null)
                 return null;
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+            if (user is null) throw new KeyNotFoundException("User not found");
 
-            if (user is null)
-                throw new KeyNotFoundException("User not found");
-
+            
+    
             restaurant.Name = dto.Name;
             restaurant.Address = dto.Address;
             restaurant.Telephone = dto.Telephone;
@@ -187,10 +162,13 @@ namespace Application.Services
             restaurant.DeliveryCost = dto.DeliveryCost;
             restaurant.WhatsappNumber = dto.WhatsappNumber;
             restaurant.Slug = dto.Slug;
-
-            // reasignar dueño
             restaurant.CreatedForUserId = dto.UserId;
-            restaurant.CreatedFor = user;
+            
+            if(restaurant.CreatedForUserId != dto.UserId)
+            {
+                restaurant.CreatedForUserId = dto.UserId;
+                restaurant.CreatedFor = user;
+            }
 
             await _context.SaveChangesAsync();
 
@@ -198,18 +176,14 @@ namespace Application.Services
                 restaurant.RestaurantId,
                 restaurant.Name,
                 restaurant.Address,
-                restaurant.Telephone ?? string.Empty,
-                restaurant.Description ?? string.Empty,
+                restaurant.Telephone,
+                restaurant.Description,
                 restaurant.LogoUrl,
                 restaurant.Images,
                 restaurant.Tags,
                 restaurant.DeliveryCost,
                 restaurant.MinOrder,
-                restaurant.Slug,
-                // dueño
-                restaurant.CreatedForUserId,
-                user.Name ?? user.Email,
-                user.Email
+                restaurant.Slug
             );
         }
 
