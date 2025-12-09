@@ -2,16 +2,10 @@
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.IdentityModel.JsonWebTokens;
 using System.IdentityModel.Tokens.Jwt;
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services
 {
@@ -24,25 +18,41 @@ namespace Application.Services
             _config = config;
         }
 
-
         public string GenerateJwtToken(User user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var keyString = _config["Jwt:Key"];
+
+            if (string.IsNullOrWhiteSpace(keyString))
+            {
+                throw new InvalidOperationException("La clave JWT (Jwt:Key) no está configurada.");
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var roleValue = Convert.ToInt32(user.Role);
+
+            // Usamos el Role como string directamente
+            var rawRole = (user.Role ?? "").Trim();
             string roleName;
 
-            switch (roleValue)
+            // Permitimos tanto números ("0","1","2") como nombres ("SuperAdmin","Admin","Customer")
+            switch (rawRole)
             {
-                case 0:
+                case "0":
+                case "SuperAdmin":
                     roleName = "SuperAdmin";
                     break;
-                case 1:
+
+                case "1":
+                case "Admin":
                     roleName = "Admin";
                     break;
-                case 2:
+
+                case "2":
+                case "Customer":
+                case "User":
                     roleName = "Customer";
                     break;
+
                 default:
                     roleName = "Customer";
                     break;
@@ -52,19 +62,18 @@ namespace Application.Services
             {
                 new Claim("userId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, roleName),                
+                new Claim(ClaimTypes.Role, roleName),
             };
 
             var token = new JwtSecurityToken(
-           issuer: _config.GetSection("Jwt:Issuer").Value,
-           audience: _config.GetSection("Jwt:Audience").Value,
-           claims: claims,
-           expires: DateTime.UtcNow.AddMinutes(30),
-           signingCredentials: creds
-              );
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: creds
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-
         }
     }
 }
